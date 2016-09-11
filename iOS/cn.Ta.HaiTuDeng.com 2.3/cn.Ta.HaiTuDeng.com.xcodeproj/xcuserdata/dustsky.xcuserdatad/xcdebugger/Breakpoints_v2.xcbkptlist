@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "cn.Ta.HaiTuDeng.com/HeartView/Controller/MainAryViewController.m"
+            timestampString = "492701440.406591"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
+            landmarkName = "-imagePickerController:didFinishPickingMediaWithInfo:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[MainAryViewController imagePickerController:didFinishPickingMediaWithInfo:]"
+                  moduleName = "cn.Ta.HaiTuDeng.com"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dustsky/Desktop/HTD/iOS/cn.Ta.HaiTuDeng.com%202.3/cn.Ta.HaiTuDeng.com/HeartView/Controller/MainAryViewController.m"
+                  timestampString = "492704665.842416"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "346"
+                  endingLineNumber = "346"
+                  offsetFromSymbolStart = "364">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__77-[MainAryViewController imagePickerController:didFinishPickingMediaWithInfo:]_block_invoke"
+                  moduleName = "cn.Ta.HaiTuDeng.com"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dustsky/Desktop/HTD/iOS/cn.Ta.HaiTuDeng.com%202.3/cn.Ta.HaiTuDeng.com/HeartView/Controller/MainAryViewController.m"
+                  timestampString = "492704665.842783"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "347"
+                  endingLineNumber = "347"
+                  offsetFromSymbolStart = "64">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

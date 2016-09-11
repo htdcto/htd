@@ -1,0 +1,71 @@
+//
+//  PrefixHeader_Ta.PCH
+//  cn.Ta.HaiTuDeng.com
+//
+//  Created by piupiupiu on 16/7/20.
+//  Copyright © 2016年 haitudeng. All rights reserved.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iOS SDK 3.0 and later."
+#endif
+
+#ifdef __OBJC__
+/*定义数据库宏
+ **数据库名
+ **数据库时间表里面的时间戳
+ */
+#define DBNAME @"Ta.sqlite"
+
+#define PrefixHeader_Ta_PCH
+#define totalPages 1
+
+#define Ip @"http://120.26.62.17/ta/ta"
+#define address(s) [Ip stringByAppendingString:(s)]
+
+//登录
+#define NOTIFICATION_LOGINCHANGE @"loginStateChange"
+#define NOTIFICATION_LOGOUTCHANGE @"logoutStateChange"
+
+//第三方库的pch
+#import "Define.h"
+#import "AFNetworking.h"
+#import "MMDrawerController.h"//侧滑
+#import "ShareActionView.h"//弹出框
+#import "UIView+GetViewController.h"
+
+//环信
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+#import "ChatDemoUIDefine.h"
+#import "EMSDKFull.h"
+#import "EaseUI.h"
+
+#define DEMO_CALL 1
+
+
+//友盟
+#import "UMMobClick/MobClick.h"
+
+//引导页
+#import "UserGuideViewController.h"
+
+//登录界面
+#import "LoginViewController.h"
+#import "BDViewController.h"
+
+#import "MainAryViewController.h"//心界面
+#import "StatusViewController.h"//状态界面
+#import "TomViewController.h"//个人中心界面
+#import "InformationViewController.h"//资讯界面
+#import "AppDelegate.h"
+
+// 小视图
+#import "UPImageViewController.h"//上传状态界面
+
+
+#endif /* PrefixHeader_Ta_PCH */
