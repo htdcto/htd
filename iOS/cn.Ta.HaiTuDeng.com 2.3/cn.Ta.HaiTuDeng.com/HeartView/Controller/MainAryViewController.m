@@ -43,7 +43,14 @@
 @property CGFloat endContentOffsetX;
 
 
-//
+//主视图界面UI
+@property (nonatomic,strong) UILabel *CountDown;
+@property (nonatomic,strong) UIButton *ClickBtn;
+@property (nonatomic,strong) UIImageView *BJimge;
+@property (nonatomic,strong) UIButton *imageBtn;
+@property (nonatomic,strong) UILabel *TimeLabel;
+@property (nonatomic,strong) UIView *TimeView;
+
 @end
 
 
@@ -86,7 +93,7 @@ static MainAryViewController *mavc;
 - (void)viewDidLoad {
     [super viewDidLoad];    
 
-    
+    [self buildMainView];
     NSDate * USDate=[NSDate date];
     //算出今天周几
     NSCalendar *gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -150,6 +157,73 @@ static MainAryViewController *mavc;
     NSLog(@"属性列表存放到沙盒的路径：%@",_filepath);
     _date=[NSDate date];
     [self setBackImage];
+}
+
+#pragma mark - UI
+
+- (void)buildMainView{
+
+    
+    //背景图片
+    _BJimge = [[UIImageView alloc]init];
+    [self.view addSubview:_BJimge];
+    
+    //点心
+    _ClickBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.view addSubview:_ClickBtn];
+    [_ClickBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(49);
+        make.width.mas_equalTo(90);
+        make.left.equalTo(self.view.mas_left);
+        make.centerY.equalTo(self.view.mas_centerY);
+        
+    }];
+    
+    [_BJimge mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top);
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(_ClickBtn.mas_top).offset(-2);
+    }];
+    
+    //照片
+    _imageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.view addSubview:_imageBtn];
+    [_imageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(49);
+        make.width.mas_equalTo(90);
+        make.right.equalTo(self.view.mas_right);
+        make.centerY.equalTo(_ClickBtn.mas_centerY);
+    }];
+   
+    //日期
+    _TimeLabel = [[UILabel alloc]init];
+    [self.view addSubview:_TimeLabel];
+    [_TimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.view.mas_right);
+        make.top.equalTo(_imageBtn.mas_bottom).offset(2);
+        make.width.mas_equalTo(90);
+    }];
+    
+    //倒计时
+    _CountDown = [[UILabel alloc]init];
+    [self.view addSubview:_CountDown];
+    [_CountDown mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(49);
+        make.left.equalTo(_ClickBtn.mas_right);
+        make.right.equalTo(_imageBtn.mas_left);
+        make.centerY.equalTo(_ClickBtn.mas_centerY);
+    }];
+    
+    //点心纪录表父视图
+    _TimeView = [[UIView alloc]init];
+    [self.view addSubview:_TimeView];
+    [_TimeView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.view.mas_right);
+        make.top.equalTo(_TimeLabel.mas_bottom).offset(2);
+        make.width.mas_equalTo(90);
+        make.bottom.equalTo(self.view.mas_bottom).offset(-40);
+    }];
+    MASAttachKeys(_TimeLabel,_imageBtn,_BJimge,_ClickBtn,_TimeView,_CountDown);
 }
     //****************我的背景图片********************
 
