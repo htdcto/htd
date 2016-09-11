@@ -214,7 +214,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
         // 收到消息时，震动
         [[EMCDDeviceManager sharedInstance] playVibration];
 }
-/*
+
 - (void)showNotificationWithMessage:(EMMessage *)message
 {
     EMPushOptions *options = [[EMClient sharedClient]pushOptions];
@@ -227,7 +227,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
         switch (messageBody.type) {
             case EMMessageBodyTypeText:
             {
-                messageStr = (EMTextMessageBody *)messageBody.text;
+                messageStr = ((EMTextMessageBody *)messageBody).text;
             }
                 break;
             case EMMessageBodyTypeImage:
@@ -248,14 +248,13 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
             case EMMessageBodyTypeVideo:{
                 messageStr = NSLocalizedString(@"message.video", @"Video");
             }
-
-                
+                break;
             default:
                 break;
         }
     }
 }
-*/
+
 /*
  #pragma mark - Navigation
  

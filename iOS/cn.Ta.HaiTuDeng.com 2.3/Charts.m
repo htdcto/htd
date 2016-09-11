@@ -73,41 +73,44 @@ BOOL full;
     LineChartDataSet *set1 = nil;
     //创建LineChartDataSet对象
     set1 = [[LineChartDataSet alloc] initWithValues:Y1 label:@"我"];
-    [set1 setColor:[UIColor redColor]];//折线颜色
-    set1.circleColors = @[[UIColor redColor]];//拐点颜色
-    /*
+    [set1 setColor:[UIColor yellowColor]];//折线颜色
+    set1.circleColors = @[[UIColor lightGrayColor]];//拐点颜色
+    
      //设置折线的样式
-     set1.lineWidth = 1.0/[UIScreen mainScreen].scale;//折线宽度
-     set1.drawValuesEnabled = YES;//是否在拐点处显示数据
-     set1.valueColors = @[[UIColor brownColor]];//折线拐点处显示数据的颜色
-     set1.drawSteppedEnabled = NO;//是否开启绘制阶梯样式的折线图
+     //set1.lineWidth = 1.0/[UIScreen mainScreen].scale;//折线宽度
+     //set1.drawValuesEnabled = YES;//是否在拐点处显示数据
+     //set1.valueColors = @[[UIColor brownColor]];//折线拐点处显示数据的颜色
+     //set1.drawSteppedEnabled = NO;//是否开启绘制阶梯样式的折线图
      //折线拐点样式
-     set1.drawCirclesEnabled = NO;//是否绘制拐点
+     //set1.drawCirclesEnabled = NO;//是否绘制拐点
      set1.circleRadius = 5.0f;//拐点半径
-     set1.circleColors = @[[UIColor redColor], [UIColor greenColor]];//拐点颜色
+     //set1.circleColors = @[[UIColor redColor], [UIColor greenColor]];//拐点颜色
      //拐点中间的空心样式
-     set1.drawCircleHoleEnabled = YES;//是否绘制中间的空心
-     set1.circleHoleRadius = 2.0f;//空心的半径
-     set1.circleHoleColor = [UIColor blackColor];//空心的颜色
+     //set1.drawCircleHoleEnabled = YES;//是否绘制中间的空心
+     //set1.circleHoleRadius = 2.0f;//空心的半径
+     //set1.circleHoleColor = [UIColor blackColor];//空心的颜色
      //折线的颜色填充样式
      //第一种填充样式:单色填充
      //        set1.drawFilledEnabled = YES;//是否填充颜色
      //        set1.fillColor = [UIColor redColor];//填充颜色
      //        set1.fillAlpha = 0.3;//填充颜色的透明度
      //第二种填充样式:渐变填充
-     set1.drawFilledEnabled = YES;//是否填充颜色
-     NSArray *gradientColors = @[(id)[ChartColorTemplates colorFromString:@"#FFFFFFFF"].CGColor,
-     (id)[ChartColorTemplates colorFromString:@"#FF007FFF"].CGColor];
-     CGGradientRef gradientRef = CGGradientCreateWithColors(nil, (CFArrayRef)gradientColors, nil);
-     set1.fillAlpha = 0.3f;//透明度
-     set1.fill = [ChartFill fillWithLinearGradient:gradientRef angle:90.0f];//赋值填充颜色对象
-     CGGradientRelease(gradientRef);//释放gradientRef
-     */
+     //set1.drawFilledEnabled = YES;//是否填充颜色
+     //NSArray *gradientColors = @[(id)[ChartColorTemplates colorFromString:@"#FFFFFFFF"].CGColor,
+     //(id)[ChartColorTemplates colorFromString:@"#FF007FFF"].CGColor];
+     //CGGradientRef gradientRef = CGGradientCreateWithColors(nil, (CFArrayRef)gradientColors, nil);
+     //set1.fillAlpha = 0.3f;//透明度
+     //set1.fill = [ChartFill fillWithLinearGradient:gradientRef angle:90.0f];//赋值填充颜色对象
+     //CGGradientRelease(gradientRef);//释放gradientRef
+    
+    
+    
     LineChartDataSet *set2 = nil;
     //创建LineChartDataSet对象
     set2 = [[LineChartDataSet alloc] initWithValues:Y2 label:@"Ta"];
-    [set2 setColor:[UIColor blueColor]];//折线颜色
-    set2.circleColors = @[[UIColor blueColor]];
+    [set2 setColor:[UIColor greenColor]];//折线颜色
+    set2.circleColors = @[[UIColor lightGrayColor]];
+    set2.circleRadius = 5.0f;
     
     //将 LineChartDataSet 对象放入数组中
     NSMutableArray *dataSets = [[NSMutableArray alloc] init];

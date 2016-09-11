@@ -340,7 +340,6 @@
 		FB52D7E21D3EA99F009BDC84 /* LoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB52D7DF1D3EA99F009BDC84 /* LoginView.m */; };
 		FB52D7E31D3EA99F009BDC84 /* RegisterView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB52D7E11D3EA99F009BDC84 /* RegisterView.m */; };
 		FB52D7E71D3EA9DC009BDC84 /* MainAryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FB52D7E51D3EA9DC009BDC84 /* MainAryViewController.m */; };
-		FB52D7E81D3EA9DC009BDC84 /* MainAryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB52D7E61D3EA9DC009BDC84 /* MainAryViewController.xib */; };
 		FB7489511D3EACD8003FDCB7 /* InformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FB7489501D3EACD8003FDCB7 /* InformationViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -988,7 +987,6 @@
 		FB52D7E11D3EA99F009BDC84 /* RegisterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterView.m; sourceTree = "<group>"; };
 		FB52D7E41D3EA9DC009BDC84 /* MainAryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainAryViewController.h; path = HeartView/Controller/MainAryViewController.h; sourceTree = "<group>"; };
 		FB52D7E51D3EA9DC009BDC84 /* MainAryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainAryViewController.m; path = HeartView/Controller/MainAryViewController.m; sourceTree = "<group>"; };
-		FB52D7E61D3EA9DC009BDC84 /* MainAryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainAryViewController.xib; path = HeartView/Controller/MainAryViewController.xib; sourceTree = "<group>"; };
 		FB74894F1D3EACD8003FDCB7 /* InformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InformationViewController.h; path = InformationView/Controller/InformationViewController.h; sourceTree = "<group>"; };
 		FB7489501D3EACD8003FDCB7 /* InformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InformationViewController.m; path = InformationView/Controller/InformationViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2127,7 +2125,6 @@
 				69891F961D6144EE009C6319 /* MainTableViewCell.h */,
 				69891F971D6144EE009C6319 /* MainTableViewCell.m */,
 				69891F981D6144EE009C6319 /* MainTableViewCell.xib */,
-				FB52D7E61D3EA9DC009BDC84 /* MainAryViewController.xib */,
 			);
 			name = Main;
 			path = cn.Ta.HaiTuDeng.com;
@@ -2498,7 +2495,6 @@
 				6904EB6E1D7738C200E48922 /* icon_002_cover.png in Resources */,
 				6904EB4C1D7738C200E48922 /* call_out_h@2x.png in Resources */,
 				6904EB581D7738C200E48922 /* chat_location_detail_disclosureHL@2x.png in Resources */,
-				FB52D7E81D3EA9DC009BDC84 /* MainAryViewController.xib in Resources */,
 				6904EB621D7738C200E48922 /* chat_receiver_audio_playing003@2x.png in Resources */,
 				6904EB8E1D7738C200E48922 /* account@2x.png in Resources */,
 				6904EB471D7738C200E48922 /* chatListCellHead.png in Resources */,
