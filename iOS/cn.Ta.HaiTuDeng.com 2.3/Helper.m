@@ -128,8 +128,17 @@ static Helper *helper = nil;
                 if (!_svc.isActive) {
                     _svc.statusUpadate = YES;
                     [_mainVC setStatusUpdate];
+                    
+                    [_svc backImageDown:^{
+                    }];
+                    _svc.needBackImage = YES;
                 }
-            [_svc backImageDown];
+                else{
+                    [_svc backImageDown:^{
+                        [_svc backImage];
+                    }];
+                }
+
             }
         }
     }

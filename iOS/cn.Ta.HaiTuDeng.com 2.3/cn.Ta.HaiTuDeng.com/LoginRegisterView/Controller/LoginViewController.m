@@ -91,7 +91,7 @@
                     //操作本地数据库
                     DB *db = [DB shareInit];
                     [db openOrCreateDB];
-                    [db updateDBAfterLoginSuccess:name successful:^{
+                    [db updateDBAfterLoginSuccess:name response:^{
                         JustLogin = NO;
                     }];
                     success(YES);

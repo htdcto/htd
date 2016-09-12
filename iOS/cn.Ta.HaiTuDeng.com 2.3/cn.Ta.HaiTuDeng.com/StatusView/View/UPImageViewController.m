@@ -122,7 +122,8 @@
                     if ([success isEqualToString:@"1"]) {
                         Message *mes = [[Message alloc]init];
                         [mes createCmdMessage:UpdateStatusImage];
-                        [_svc backImageDown];
+                        [_svc backImageDown:^{
+                        }];
                         
                    dispatch_async(dispatch_get_main_queue(), ^{
                        _alertController = [UIAlertController alertControllerWithTitle:@"上传成功" message:nil preferredStyle:UIAlertControllerStyleAlert];

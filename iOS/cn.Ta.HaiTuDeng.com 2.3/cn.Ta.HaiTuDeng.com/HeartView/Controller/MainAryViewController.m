@@ -591,7 +591,7 @@ static MainAryViewController *mavc;
             DB *db = [DB shareInit];
             [db openOrCreateDB];
             __weak typeof(self) weakself = self;
-            [db updateDBAfterLoginSuccess:_user successful:^{
+            [db updateDBAfterLoginSuccess:_user response:^{
                 [weakself loadChartView:1];
             }];
 }

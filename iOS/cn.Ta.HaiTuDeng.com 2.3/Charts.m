@@ -71,6 +71,7 @@ BOOL full;
     }
     
     LineChartDataSet *set1 = nil;
+    
     //创建LineChartDataSet对象
     set1 = [[LineChartDataSet alloc] initWithValues:Y1 label:@"我"];
     [set1 setColor:[UIColor yellowColor]];//折线颜色

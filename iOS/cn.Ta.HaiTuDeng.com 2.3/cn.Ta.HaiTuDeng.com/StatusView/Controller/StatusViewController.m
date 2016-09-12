@@ -38,7 +38,9 @@
     _BJImage.userInteractionEnabled = YES;
     UITapGestureRecognizer *singleTap =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickImage)];
     [_BJImage addGestureRecognizer:singleTap];
-    [self backImageDown];
+    [self backImageDown:^{
+        [self backImage];
+    }];
     self.cv = [[ChartView alloc]init];
 }
     
@@ -69,6 +71,11 @@
     [super viewWillAppear:animated];
     self.isActive = YES;
     [_BJImage setImage:_image];
+    if (self.needBackImage) {
+        [self backImage];
+        self.needBackImage = NO;
+    }
+
     //友盟页面统计
     [MobClick beginLogPageView:@"状态页面"];
 
@@ -84,13 +91,8 @@
     [MobClick endLogPageView:@"状态页面"];
 }
 
--(void)backImageDown
+-(void)backImageDown:(void(^)(void))needBack
 {
-    
-    //异步下载状态图片
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *Uname = [userDefaults objectForKey:@"name"];
     NSString *Tname = [userDefaults objectForKey:@"Ttel"];
@@ -109,29 +111,23 @@
                 //仅有当两个用户第一次使用，都没有发状态的情况，服务器返回数据除了双方点击次数
                 _Diction = @{@"tel":tel,@"Time":Time,@"URL":Url,@"Mood":Mood};
                 [self setPieChartView];
-                [self backImage];
+                NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:Url]];
+                _image = [UIImage imageWithData:data];
+                [_BJImage setImage:_image];
+                    needBack();
                 }
             }
-
-            
         } error:^(NSError *error) {
             NSLog(@"error");
             
         }];
-    });
+
 }
 -(void)backImage
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *Uname = [userDefaults objectForKey:@"name"];
-    NSString *imageUrl = _Diction [@"URL"];
     NSString *tel = _Diction[@"tel"];
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
-    _image = [UIImage imageWithData:data];
-    dispatch_async(dispatch_get_main_queue(),^{
-        if(self.isActive)
-        [_BJImage setImage:_image];
-    });
     if(tel != Uname)
     {
     NSString *tel = [_Diction objectForKey:@"tel"];

@@ -15,7 +15,8 @@
 
 @property BOOL isActive;
 @property BOOL statusUpadate;
-
--(void)backImageDown;
+@property BOOL needBackImage;
+-(void)backImageDown:(void(^)(void))needBack;
 -(void)setPieChartView;
+-(void)backImage;
 @end

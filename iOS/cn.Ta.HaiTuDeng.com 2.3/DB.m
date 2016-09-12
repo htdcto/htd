@@ -25,7 +25,7 @@
     return _db;
 }
 
--(void)updateDBAfterLoginSuccess:(NSString *)Uname successful:(void(^)(void))response
+-(void)updateDBAfterLoginSuccess:(NSString *)Uname response:(void(^)(void))response
 {
     
     sqlite3_stmt *tdbps;
