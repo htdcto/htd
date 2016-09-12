@@ -38,9 +38,7 @@
     _BJImage.userInteractionEnabled = YES;
     UITapGestureRecognizer *singleTap =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickImage)];
     [_BJImage addGestureRecognizer:singleTap];
-    [self backImageDown:^{
-        [self backImage];
-    }];
+    [self backImageDown:^{}];
     self.cv = [[ChartView alloc]init];
 }
     

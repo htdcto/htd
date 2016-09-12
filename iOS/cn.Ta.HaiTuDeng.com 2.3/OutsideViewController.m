@@ -21,7 +21,7 @@
 {
     [super viewDidLoad];
     self.rvc = [[RankViewController alloc]init];
-    self.rvc.view.frame  = CGRectMake(50, 100, 200, 400);
+    self.rvc.view.frame  = CGRectMake(50, 100,[UIScreen mainScreen].bounds.size.width, 400);
     [self.view addSubview:self.rvc.view];
 }
 
