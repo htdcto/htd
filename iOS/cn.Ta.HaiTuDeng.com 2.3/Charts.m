@@ -48,6 +48,7 @@ BOOL full;
     {arrayY1=[NSMutableArray arrayWithObjects:@0,nil];}
     
     NSMutableArray *Y1 = [[NSMutableArray alloc]init];
+    NSLog(@"uuuuuuuuuuuuuuu%@",arrayY1);
     
     for(int i=0; i<arrayY1.count;i++) {
         double var = [arrayY1[i] doubleValue];
@@ -56,10 +57,13 @@ BOOL full;
         
     }
     
+    
     NSMutableArray *arrayY2=[[NSMutableArray alloc]init];
     arrayY2=weekCountForAll[1];
     if(arrayY2==nil)
     {arrayY2=[NSMutableArray arrayWithObjects:@0,nil];}
+    
+    NSLog(@"ttttttttttttttttttt%@",arrayY2);
     
     NSMutableArray *Y2 = [[NSMutableArray alloc]init];
     
@@ -223,7 +227,7 @@ BOOL full;
     arrayY1=dataSource[0];
     if(arrayY1==nil)
     {arrayY1=[NSMutableArray arrayWithObjects:@0,nil];}
-    
+    NSLog(@"uuuuuuuuuuuuuuu%@",arrayY1);
     NSMutableArray *Y1 = [[NSMutableArray alloc]init];
     
     for(int i=0; i<arrayY1.count;i++) {
@@ -237,7 +241,7 @@ BOOL full;
     arrayY2=dataSource[1];
     if(arrayY2==nil)
     {arrayY2=[NSMutableArray arrayWithObjects:@0,nil];}
-    
+        NSLog(@"ttttttttttttttttttt%@",arrayY2);
     NSMutableArray *Y2 = [[NSMutableArray alloc]init];
     
     for(int i=0; i<arrayY2.count;i++) {

@@ -26,22 +26,21 @@
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) UILabel *label;//当日点击时间列表
 @property (nonatomic,assign) UIModalTransitionStyle UIModalTransitionStyleFlipHorizontal;
-@property (nonatomic,strong) NSString *BdTime;
+
 @property (strong,nonatomic) NSString *user;
 @property (strong,nonatomic) Helper *helper;
 
 
-@property NSInteger kk;
-@property NSInteger kkk;
-@property NSInteger kkkblock;
+@property (nonatomic,strong) NSDate *currentDate;
+@property (nonatomic,strong) NSDate *searchingDate;
+@property (nonatomic,strong) NSDate *BdTime;
+@property (nonatomic,strong) NSDate *currentMonday;
+@property (nonatomic,strong) NSDate *currentSunday;
+@property (nonatomic,strong) NSDate *searchingMonday;
+@property (nonatomic,strong) NSDate *searchingSunday;
 @property NSInteger week;
-@property NSInteger weekDaycount;
-@property NSInteger bigkey;
-@property NSInteger bindweekday;
 
-@property CGFloat startContentOffsetX;
-@property CGFloat willEndContentOffsetX;
-@property CGFloat endContentOffsetX;
+
 
 
 //主视图界面UI
@@ -100,56 +99,39 @@ static MainAryViewController *mavc;
     [super viewDidLoad];    
 
     [self buildMainView];
-    NSDate * USDate=[NSDate date];
-    //算出今天周几
-    NSCalendar *gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSInteger weekday = [gregorianCalendar component:NSCalendarUnitWeekday fromDate:USDate]-1;
-    _week = (int)weekday;
-    //算出今天周几
-    if(_week==0)
-    {_week=7;}
-    //[self TtelName];
-
-    _kkkblock=0;
     
-//    self.view.backgroundColor = [UIColor colorWithRed:(242/255.0f) green:(242/255.0f) blue:(242/255.0f) alpha:1];
-    
+    //今天的时间
+    NSDate *USDate=[NSDate date];
+    NSTimeZone *zone = [NSTimeZone systemTimeZone];
+    NSInteger interval = [zone secondsFromGMTForDate: USDate];
+    self.currentDate = [USDate  dateByAddingTimeInterval: interval];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"YYYY-MM-dd"];
+    NSTimeZone *timeZone=[NSTimeZone timeZoneWithName:@"UTC"];
+    formatter.timeZone = timeZone;
+    NSString *date = [formatter stringFromDate:self.currentDate];
+    self.currentDate = [formatter dateFromString:date];
+    self.searchingDate = self.currentDate;
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     _user = [userDefaults objectForKey:@"name"];
-    
     //取出绑定日期
     _BdTime = [userDefaults objectForKey:@"BdTime"];
     
-  
     
+    //算出今天周几
+    NSCalendar *chineseCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    _week = [chineseCalendar component:NSCalendarUnitWeekday fromDate:USDate]-1;
+    if(_week==0)
+    {_week=7;}
+    self.currentMonday = [NSDate dateWithTimeInterval:(_week-1)*(-24*60*60) sinceDate:self.currentDate];
+    self.currentSunday = [NSDate dateWithTimeInterval:6*(24*60*60) sinceDate:self.currentMonday];
     
-    //锁住折线图的参数 bigkey
-    NSDateFormatter * formatter = [[NSDateFormatter alloc ] init];
-    [formatter setDateFormat:@"YYYY-MM-dd"];
-    NSDate*BdTime =  [formatter dateFromString:_BdTime];
-    
-   _bindweekday = [gregorianCalendar component:NSCalendarUnitWeekday fromDate:BdTime]-1;
-    if(_bindweekday==0)
-    {_bindweekday=7;}
+    self.searchingMonday = self.currentMonday;
+    self.searchingSunday = self.currentSunday;
 
-    long  BdTimelong = (long)[BdTime timeIntervalSince1970];
-    
-    long  BdTimedate=BdTimelong/(60*60*24);
-    long  now = (long)[USDate timeIntervalSince1970];
-    long nowdate=now/(60*60*24);
-    _bigkey=(int)nowdate-(int)BdTimedate;
-    
-   // NSLog(@"988976545678???????????????????????????????%@,%@",BdTime,USDate);
-
-    //锁住折线图的参数 bigkey
     _chartView = [[ChartView alloc]init];
     [self createTableView];
-    
-    if(_bigkey<=6)
-    {[self loadChartView:_bindweekday];}
-    else
-    {[self loadChartView:1];}
-    
+    [self loadChartView];
     [self loadData];
     
     
@@ -175,6 +157,8 @@ static MainAryViewController *mavc;
     
     //点心
     _ClickBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_ClickBtn addTarget:self action:@selector(ClickBtn:) forControlEvents:UIControlEventTouchUpInside];
+    _ClickBtn.imageView.image = [UIImage imageNamed:@"XInIcon"];
     [self.view addSubview:_ClickBtn];
     [_ClickBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(49);
@@ -257,7 +241,7 @@ static MainAryViewController *mavc;
     DB *db = [DB shareInit];
     [db openOrCreateDB];
    
-    NSArray *upTimestamp = [db upTimestamp:_kk];
+    NSArray *upTimestamp = [db upTimestamp:self.searchingDate];
     self.dataArray = upTimestamp[1];
     self.dataString = upTimestamp[0];
   
@@ -265,61 +249,14 @@ static MainAryViewController *mavc;
     
 }
 
--(void)loadChartView:(NSInteger)startIndex
+-(void)loadChartView
 {
     [self.linechart removeFromSuperview];
     DB *db = [DB shareInit];
     [db openOrCreateDB];
-    NSArray *weekCountForAll =[db caculateTheCountOfTimestampFromServer:_kkk :startIndex];
-    //NSLog(@"传入scrollViewUI的%@",weekCountForAll);
-    NSArray *fuck=weekCountForAll[0];
-    _weekDaycount=(int)[fuck count];
+    NSArray *weekCountForAll =[db caculateTheCountOfTimestampFromServer:self.searchingMonday];
     [self scrollViewUI:weekCountForAll];
 }
--(void)loadChartViewblock:(NSInteger)startIndex
-{
-    [self.linechart removeFromSuperview];
-    DB *db = [DB shareInit];
-    [db openOrCreateDB];
-    NSArray *weekCountForAll =[db caculateTheCountOfTimestampFromServer:_kkkblock :startIndex];
-    //NSLog(@"传入scrollViewUI的%@",weekCountForAll);
-    NSArray *fuck=weekCountForAll[0];
-    _weekDaycount=(int)[fuck count];
-    [self scrollViewUI:weekCountForAll];
-    
-}
-
-
-/*
--(void)TtelName
-{
- 
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *Uname = [userDefaults objectForKey:@"name"];
-    NSString *Tname = [userDefaults objectForKey:@"Ttel"];
-    if (Tname == NULL) {
-        NSDictionary *dic = @{@"Utel":Uname};
-        //网络请求
-               [LDXNetWork GetThePHPWithURL:GEINEME par:dic success:^(id responseObject)
-         {
-       
-             if ([responseObject[@"success"]isEqualToString:@"1"]) {
-                 
-                 
-                 NSDictionary *Ttel = responseObject[@"Ttel"];
-                 [userDefaults setObject:Ttel forKey:@"Ttel"];
-                 
-                 
-                }
-          
-         } error:^(NSError *error) {
-             
-         }];
-    }
-    NSLog(@"创建沙盒:包含%@,%@,自己的时间戳",Uname,Tname);
-    
-}
- */
 //----------------------------列表---------------------------------
 
 -(void)createTableView{
@@ -346,7 +283,7 @@ static MainAryViewController *mavc;
     [formatter1 setDateFormat:@"YY年MM月dd日"];
     NSString * dateString =  [formatter1 stringFromDate :_dataString];
 
-        if(_kk==_bigkey-1){
+    if(self.searchingDate == self.BdTime){
            NSString *text = [@"💕" stringByAppendingFormat:@"%@", dateString];
         _label.text = text;
         
@@ -357,7 +294,6 @@ static MainAryViewController *mavc;
         _label.text = dateString;
     _label.textColor = [UIColor redColor];
     _label.font = [UIFont boldSystemFontOfSize:12.3f];}
-    //NSLog(@"标题:%@",_label.text);
   
     [self.view addSubview:_label];
     //cell如果不能铺满tableView 是不能滑动的 只能由弹簧效果进行弹动
@@ -429,65 +365,34 @@ static MainAryViewController *mavc;
     
     if (swipe.direction == UISwipeGestureRecognizerDirectionLeft)
     {
-        if(_kk==0)
-        {}
-        else
+        if(self.searchingDate != self.currentDate)
         {
-        _kk--;
-            if(_kk+1 == (_kkk-1)*_weekDaycount+_week)
-            {
-                _kkk--;
-                [self loadChartView:1];
-                
-            }
-
-            
+            self.searchingDate = [NSDate dateWithTimeInterval:24*60*60 sinceDate:self.searchingDate];
             [self loadData];
-            
-            
- 
-   
+            if (self.searchingDate > self.searchingSunday) {
+                
+                self.searchingMonday = [NSDate dateWithTimeInterval:7*(24*60*60) sinceDate:self.searchingMonday];
+                self.searchingSunday = [NSDate dateWithTimeInterval:7*(24*60*60) sinceDate:self.searchingSunday];
+                [self loadChartView];
+            }
         }
         //向右轻扫
     }
     if (swipe.direction == UISwipeGestureRecognizerDirectionRight)
     {
         
-        NSDateFormatter * formatter2 = [[NSDateFormatter alloc ] init];
-        [formatter2 setDateFormat:@"YYYY-MM-dd"];
-        NSString * getlabledate =  [formatter2 stringFromDate :_dataString];
-        if([_BdTime isEqualToString:getlabledate])
-        {NSLog(@"lalalal");
-        
-        }else
-            {
-        
-                NSLog(@"getlabledate:::::::%@",getlabledate);
-                NSLog(@"majianBD%@",_BdTime);
-                _kk++;
-                if(_kk == _kkk*_weekDaycount+_week )
-                {
-                    _kkk++;
-                    ////
-                    NSInteger lock = (_kkk+1)*7+_week-1;
-                    NSLog(@"这是lock %ld,这是bigkey－1 %ld",(long)lock,(long)_bigkey);
-                    
-                    if(lock>=_bigkey-1)
-                    {[self loadChartView:_bindweekday];}
-                    else
-                    {
-
-                    ////
-                    
-                    
-                        [self loadChartView:1];}
-            
-                }
-                [self loadData];
-
+        if(self.searchingDate != self.BdTime)
+        {
+            self.searchingDate = [NSDate dateWithTimeInterval:-24*60*60 sinceDate:self.searchingDate];
+            [self loadData];
+            if (self.searchingDate < self.searchingMonday) {
+                
+                self.searchingMonday = [NSDate dateWithTimeInterval:7*(-24*60*60) sinceDate:self.searchingMonday];
+                self.searchingSunday = [NSDate dateWithTimeInterval:7*(-24*60*60) sinceDate:self.searchingSunday];
+                [self loadChartView];
             }
+        }
     }
-    
 }
 //---------------------------列表---------------------------------
 //******************设置对方背景图片******************
@@ -597,7 +502,7 @@ static MainAryViewController *mavc;
             [db openOrCreateDB];
             __weak typeof(self) weakself = self;
             [db updateDBAfterLoginSuccess:_user response:^{
-                [weakself loadChartView:1];
+                [weakself loadChartView];
             }];
 }
 
@@ -632,24 +537,14 @@ static MainAryViewController *mavc;
     if (swipe.direction == UISwipeGestureRecognizerDirectionLeft)
     {
         
-        if(_kkk==0)
-        {}
-        else
+        if(self.currentDate > self.searchingSunday)
         {
-            
-            
-            _kkk--;
-            
-            _kk = _kkk*7+_week-1;
+            self.searchingMonday = [NSDate dateWithTimeInterval:7*(24*60*60) sinceDate:self.searchingMonday];
+            self.searchingSunday = [NSDate dateWithTimeInterval:7*(24*60*60) sinceDate:self.searchingSunday];
+            [self loadChartView];
+            self.searchingDate = self.searchingMonday;
             [self loadData];
-            [self loadChartView:1];
-            
         }
-        
-        
-        
-        
-        //向右轻扫
     }
     
     
@@ -657,33 +552,14 @@ static MainAryViewController *mavc;
     if (swipe.direction == UISwipeGestureRecognizerDirectionRight)
     {
         
-        NSInteger lock = (_kkk+1)*7+_week-1;
-        //NSLog(@"这是lock %ld,这是bigkey－1 %ld",(long)lock,(long)_bigkey);
-        /*
-         if(lock>=_bigkey-1)
-         {
-         if(_kkkblock==0)
-         {_kkkblock=_kkk;
-         _kkkblock++;}
-         
-         [self loadChartViewblock:_bindweekday];
-         _kk=_bigkey-1;
-         [self loadData];
-         _kkk=_kkkblock;
-         
-         }
-         
-         else
-         {*/
-        _kkk++;
-        
-        _kk = _kkk*7+_week-1;
-        
-        
-        [self loadData];
-        [self loadChartView:1];
-        // }
-        
+        if(self.BdTime < self.searchingMonday)
+        {
+            self.searchingMonday = [NSDate dateWithTimeInterval:7*(-24*60*60) sinceDate:self.searchingMonday];
+            self.searchingSunday = [NSDate dateWithTimeInterval:7*(-24*60*60) sinceDate:self.searchingSunday];
+            [self loadChartView];
+            self.searchingDate = self.searchingSunday;
+            [self loadData];
+        }
     }
     
 }

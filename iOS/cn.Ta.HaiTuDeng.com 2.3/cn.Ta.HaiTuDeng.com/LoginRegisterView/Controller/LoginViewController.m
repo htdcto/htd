@@ -67,7 +67,7 @@
                 else
                 {
                     NSString *Ttel = responseObject[@"Ttel"];
-                    NSString *BdTime = responseObject[@"BdTime"];
+                    NSString *BdTimeString = responseObject[@"BdTime"];
                     NSString *Expert = responseObject[@"expert"];
                     
                     NSThread *thread = [NSThread currentThread];
@@ -79,6 +79,13 @@
                     [userDefaults setObject:name forKey:@"name"];
                     [userDefaults setObject:pass forKey:@"password"];
                     [userDefaults setObject:Ttel forKey:@"Ttel"];
+                    
+                    NSTimeZone *timeZone=[NSTimeZone timeZoneWithName:@"UTC"];
+                    NSDateFormatter * formatter = [[NSDateFormatter alloc ] init];
+                    [formatter setDateFormat:@"YYYY-MM-dd"];
+                    [formatter setTimeZone:timeZone];
+                    NSDate *BdTime = [formatter dateFromString:BdTimeString];
+
                     [userDefaults setObject:BdTime forKey:@"BdTime"];
                     [userDefaults setObject:Expert forKey:@"expert"];
                     NSLog(@".............%@",BdTime);

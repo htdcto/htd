@@ -140,69 +140,44 @@
 
 
 
--(NSArray *)upTimestamp:(NSInteger)key //刷新左侧具体时间表格子
+-(NSArray *)upTimestamp:(NSDate *)dayOfSearching//刷新左侧具体时间表格子
 {
     
     sqlite3_stmt *getu;
     NSString * result;
     NSMutableArray * times=[[NSMutableArray alloc]init];
-    int i;
-    //1是当天，加几就是前几天
-    
-    NSDate * date=[NSDate date];
-    
-    long  now = (long)[date timeIntervalSince1970];
-    now = now + 8*60*60;
-    long trun=now/(24*60*60);
-    long trun1=trun- key;
-    long trun2=trun1+1;
-    long timepoint=trun1*24*60*60-8*60*60;
-    long getdate=trun1*24*60*60-8*60*60;
-    long timepoint1=trun2*24*60*60-8*60*60;
-    NSDate * t  = [NSDate dateWithTimeIntervalSince1970:timepoint];
-    NSDate * t1  = [NSDate dateWithTimeIntervalSince1970:timepoint1];
-    NSDate * getdateing=[NSDate dateWithTimeIntervalSince1970:getdate];
-    NSDateFormatter * formatter = [[NSDateFormatter alloc ] init];
-    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-    NSString * sls =  [formatter stringFromDate :t];
-    NSString * sls2 =  [formatter stringFromDate :t1];
-    //NSDateFormatter * formatter1 = [[NSDateFormatter alloc ] init];
-    //[formatter1 setDateFormat:@"YY年MM月dd日"];
-    //NSString * getdateed =  [formatter1 stringFromDate :getdateing];
-    NSString *uStatement = [NSString stringWithFormat:@"select time from TTIME where time < '%@' and time >= '%@'",sls2,sls];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"YYYY-MM-dd"];
+    NSString *day = [formatter stringFromDate:dayOfSearching];
+
+    NSString *uStatement = [NSString stringWithFormat:@"select time from TTIME where time like '%@%%'",day];
     const char * getUTimeStamp = [uStatement UTF8String];
     sqlite3_prepare_v2(db, getUTimeStamp, -1, &getu, NULL);
-    NSDate * resed=[[NSDate alloc ] init];//
-    while((i = sqlite3_step(getu)) == SQLITE_ROW)
+    //NSDate * resed=[[NSDate alloc ] init];
+    while(sqlite3_step(getu) == SQLITE_ROW)
     {
-        
+        //转换时间
         result = [[NSString alloc]initWithUTF8String: (char*) sqlite3_column_text (getu, 0)];
         NSDateFormatter * formatter = [[NSDateFormatter alloc ] init];
         [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-        resed =  [formatter dateFromString:result];
+        NSDate *resed =  [formatter dateFromString:result];
         NSDateFormatter * formatter1 = [[NSDateFormatter alloc ] init];
         [formatter1 setDateFormat:@"HH:mm:ss"];
         NSString * reseded =  [formatter1 stringFromDate :resed];
         [times addObject:reseded];
     }
-    NSArray *labelData = [[NSArray alloc]initWithObjects:getdateing,times,nil];
+    NSArray *labelData = [[NSArray alloc]initWithObjects:dayOfSearching,times,nil];
     return labelData;
     
 }
 
--(NSMutableArray *)caculateTheCountOfTimestampFromServer:(NSInteger)k :(NSInteger)startIndex
+-(NSMutableArray *)caculateTheCountOfTimestampFromServer:(NSDate *)searchingMonday
 {
+    //NSInteger DB_startIndex = startIndex;
+   // NSString * SDB_startIndex=[NSString stringWithFormat:@"%ld",(long)DB_startIndex];
     
-    NSInteger DB_startIndex = startIndex;
-    NSString * SDB_startIndex=[NSString stringWithFormat:@"%ld",(long)DB_startIndex];
+    NSDate *lastSearchingMonday = [NSDate dateWithTimeInterval:7*(24*60*60) sinceDate:searchingMonday];
     NSMutableArray *weekCountForAll = [[NSMutableArray alloc]init];
-    //时间处理
-    NSDate *USDate = [NSDate date];
-    _date=[NSDate date];
-    long now = (long)[_date timeIntervalSince1970];
-    now = now+60*60*8;
-    _date = [NSDate dateWithTimeIntervalSince1970:now];
-    NSLog(@"当前时间%@",_date);
     //数据库参数
     sqlite3_stmt *getu;
     sqlite3_stmt *gett;
@@ -210,37 +185,16 @@
     NSString * result;
     NSMutableArray * uResult = [[NSMutableArray alloc]init];
     NSMutableArray * tResult = [[NSMutableArray alloc]init];
-    //时间轴参数
-    NSCalendar *gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSInteger weekday = [gregorianCalendar component:NSCalendarUnitWeekday fromDate:USDate]-1;
-    if(weekday==0)
-    {weekday=7;}
-    NSLog(@"今天是周%ld",weekday);
-    NSInteger key=0;
-    weekday=weekday+k*7;
-    NSInteger mykey=weekday;
-    long trun=now/(24*60*60);
-    
-    long trun1=trun-mykey+1;
-    long trun2=trun1+7;
-    long timepoint=(trun1*24*60*60-8*60*60);
-    long timepoint2=(trun2*24*60*60-8*60*60);
-    NSDate * t  = [NSDate dateWithTimeIntervalSince1970:timepoint];
-    NSDate * t2  = [NSDate dateWithTimeIntervalSince1970:timepoint2];
-    
-    
-    NSDateFormatter * formatter = [[NSDateFormatter alloc ] init];
-    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-    NSString * sls =  [formatter stringFromDate :t];
-    NSString * sls2 =  [formatter stringFromDate :t2];
-    NSLog(@"(((((((sls%@((((((((sls2%@",sls,sls2);
-    
-    NSString *uStatement = [NSString stringWithFormat:@"select time from UTIME where time < '%@' and time >= '%@'",sls2,sls];
-    NSString *tStatement = [NSString stringWithFormat:@"select time from TTIME where time < '%@' and time >= '%@'",sls2,sls];
+  
+    NSString *uStatement = [NSString stringWithFormat:@"select time from UTIME where time < '%@' and time >= '%@'",lastSearchingMonday,searchingMonday];
+    NSString *tStatement = [NSString stringWithFormat:@"select time from TTIME where time < '%@' and time >= '%@'",lastSearchingMonday,searchingMonday];
     const char * getUTimeStamp = [uStatement UTF8String];
     const char * getTTimeStamp = [tStatement UTF8String];
     sqlite3_prepare_v2(db, getUTimeStamp, -1, &getu, NULL);
     sqlite3_prepare_v2(db, getTTimeStamp, -1, &gett, NULL);
+    
+    long timepoint = (long)[searchingMonday timeIntervalSince1970];
+    
     while((i = sqlite3_step(getu)) == SQLITE_ROW)
     {
         result = [[NSString alloc]initWithUTF8String: (char*) sqlite3_column_text (getu, 0)];
@@ -258,13 +212,11 @@
     
     NSString *p = [[NSString alloc]init];
     NSString *pt = [[NSString alloc]init];
-    if (mykey<7)
-    {
-        key=mykey;
-    }
-    else
-    {key=8-DB_startIndex;}
-    for(int i=0;i<key;i++)
+    
+    
+    
+  
+    for(int i=0;i<7;i++)
     {
         int dmax=0;
         int dmaxt=0;
@@ -315,7 +267,7 @@
     [weekCountForAll addObject:longtime];
     [weekCountForAll addObject:longtimet];
     [weekCountForAll addObject:arrayX];
-    [weekCountForAll addObject:SDB_startIndex];
+    //[weekCountForAll addObject:SDB_startIndex];
     
     
     return weekCountForAll;
