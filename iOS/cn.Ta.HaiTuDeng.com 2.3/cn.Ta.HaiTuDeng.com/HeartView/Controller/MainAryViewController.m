@@ -16,17 +16,18 @@
 
 @interface MainAryViewController ()<UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate>
 
-@property(strong,nonatomic) ChartView *chartView;
-@property (strong,nonatomic)LineChartView *linechart;
-@property(nonatomic,strong) NSString* locationString;
-@property (nonatomic,strong)NSString * filepath;//tamax.plist,装对方数据
-@property(nonatomic,strong) NSTimer* timer;// 定义倒计时实现定时器
-@property (nonatomic,strong)NSDate * date;//当前时间
-@property (nonatomic,strong)UITableView *tableView;
-@property (nonatomic,strong)UILabel *label;//当日点击时间列表
-@property(nonatomic,assign) UIModalTransitionStyle UIModalTransitionStyleFlipHorizontal;
-@property (nonatomic,strong)NSString *BdTime;
-@property (strong,nonatomic)NSString *user;
+@property (strong,nonatomic) ChartView *chartView;
+@property (strong,nonatomic) BubbleChartView *linechart;
+@property (nonatomic,strong) BubbleChartView *bubbleChart;
+@property (nonatomic,strong) NSString* locationString;
+@property (nonatomic,strong) NSString * filepath;//tamax.plist,装对方数据
+@property (nonatomic,strong) NSTimer* timer;// 定义倒计时实现定时器
+@property (nonatomic,strong) NSDate * date;//当前时间
+@property (nonatomic,strong) UITableView *tableView;
+@property (nonatomic,strong) UILabel *label;//当日点击时间列表
+@property (nonatomic,assign) UIModalTransitionStyle UIModalTransitionStyleFlipHorizontal;
+@property (nonatomic,strong) NSString *BdTime;
+@property (strong,nonatomic) NSString *user;
 @property (strong,nonatomic) Helper *helper;
 
 
@@ -66,19 +67,24 @@ static MainAryViewController *mavc;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //友盟页面统计
     self.isActive = YES;
+    //友盟页面统计
     [MobClick beginLogPageView:@"首页"];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    //结束友盟页面统计
-    self.isActive = NO;
     self.messageCount = 0;
     [[NSNotificationCenter defaultCenter]postNotificationName:@"setMavcUnread" object:nil];
+    self.isActive = NO;
+    //结束友盟页面统计
     [MobClick endLogPageView:@"首页"];
+}
+
+-(void)dealloc
+{
+    [[NSUserDefaults standardUserDefaults]setInteger:self.messageCount forKey:@"messageCountLastTime"];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -145,7 +151,6 @@ static MainAryViewController *mavc;
     {[self loadChartView:1];}
     
     [self loadData];
-    [self pushInformation];
     
     
     NSFileManager *fileManager = [[NSFileManager alloc] init];
@@ -599,8 +604,8 @@ static MainAryViewController *mavc;
 
 -(void)scrollViewUI:(NSArray *)weekCountForAll
 {
-    _linechart.backgroundColor = [[UIColor alloc] colorWithAlphaComponent:0];
-    _linechart = [_chartView drawLineChart:weekCountForAll];
+    self.linechart.backgroundColor = [[UIColor alloc] colorWithAlphaComponent:0];
+    self.linechart = [_chartView drawBubbleChart:weekCountForAll];
     [self.view addSubview:(self.linechart)];
     [self.linechart mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo((CGSizeMake(self.view.bounds.size.width-80, 170)));
@@ -739,30 +744,6 @@ static MainAryViewController *mavc;
     NSLog(@"%@",_CountDown.text);
     NSString *labletime=[NSString stringWithFormat:@"%@:%@:%@",h,m,s];
     _CountDown.text = labletime;
-}
-
-//资讯主页面推送
--(void)pushInformation
-{
-    NSString *text = @"lalalala";
-    UIImage *bubble = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"bubble" ofType:@"png"]];
-    UIImageView *bubbleImageView = [[UIImageView alloc] initWithImage:[bubble stretchableImageWithLeftCapWidth:21 topCapHeight:14]];
-    
-    UIFont *font = [UIFont systemFontOfSize:13];
-    CGSize size = [text sizeWithFont:font constrainedToSize:CGSizeMake(150.0f, 1000.0f) lineBreakMode: UILineBreakModeWordWrap];
-    NSLog(@"font zize%f,%f",size.width,size.height);
-    
-    UILabel *bubbleText = [[UILabel alloc] initWithFrame:CGRectMake(21.0f, 14.0f, size.width+10, size.height+10)];
-    bubbleText.backgroundColor = [UIColor clearColor];
-    bubbleText.font = font;
-    bubbleText.numberOfLines = 0;
-    bubbleText.lineBreakMode = UILineBreakModeCharacterWrap;
-    bubbleText.text = text;
-    
-    bubbleImageView.frame = CGRectMake(0, 0, 200, 150);
-    
-    [self.view addSubview:bubbleImageView];
-    [self.view addSubview:bubbleText];
 }
 
 - (void)didReceiveMemoryWarning {

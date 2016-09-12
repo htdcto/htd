@@ -45,11 +45,11 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
     
     [self createConversation];
     
-    _maVC.messageCount = mavcCount;
+    _maVC.messageCount = mavcCount + [[NSUserDefaults standardUserDefaults]integerForKey:@"messageCountLastTime"];
     mavcCount=0;
     [self setMavcUnread];
     
-    _statusVC.statusUpadate = updateStatus;
+    _statusVC.statusUpadate = updateStatus || [[NSUserDefaults standardUserDefaults]boolForKey:@"statusUpdateLastTime"];
     updateStatus = NO;
     [self setStatusUpdate];
 
@@ -165,6 +165,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
         [_statusVC.tabBarItem setBadgeValue:nil];
     }else{
         [_statusVC.tabBarItem setBadgeValue:@"!"];
+        _statusVC.needBackImage = YES;
     }
     [self setApplicationUnread];
 

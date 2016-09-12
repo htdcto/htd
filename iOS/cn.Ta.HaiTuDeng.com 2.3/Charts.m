@@ -136,7 +136,6 @@ BOOL full;
     ChartXAxis *xAxis = self.LineChartView.xAxis;
     xAxis.drawGridLinesEnabled = NO;//不绘制网格线
     xAxis.labelPosition = XAxisLabelPositionBottom;//X轴的显示位置，默认是显示在上面的
-    xAxis._axisMinimum = 0;
     self.LineChartView.rightAxis.enabled = NO;//不绘制右边轴
     self.LineChartView.doubleTapToZoomEnabled =NO;
     [self.LineChartView setDragEnabled:NO];
@@ -210,6 +209,68 @@ BOOL full;
     self.PieChartView.backgroundColor = [UIColor whiteColor];
     return self.PieChartView;
     
+}
+
+//气泡图
+-(BubbleChartData *)setDataforBubble:(NSArray *)dataSource
+{
+    //NSMutableArray *arrayX=[[NSMutableArray alloc]init];
+    //arrayX = dataSource[2];
+    //ChartDefaultAxisValueFormatter *ss = [[ChartDefaultAxisValueFormatter alloc]init];
+    
+    
+    NSMutableArray *arrayY1=[[NSMutableArray alloc]init];
+    arrayY1=dataSource[0];
+    if(arrayY1==nil)
+    {arrayY1=[NSMutableArray arrayWithObjects:@0,nil];}
+    
+    NSMutableArray *Y1 = [[NSMutableArray alloc]init];
+    
+    for(int i=0; i<arrayY1.count;i++) {
+        double var = [arrayY1[i] doubleValue];
+        BubbleChartDataEntry *entry = [[BubbleChartDataEntry alloc]initWithX:(double)i y:var size:0.5];
+        [Y1 addObject:entry];
+        
+    }
+    
+    NSMutableArray *arrayY2=[[NSMutableArray alloc]init];
+    arrayY2=dataSource[1];
+    if(arrayY2==nil)
+    {arrayY2=[NSMutableArray arrayWithObjects:@0,nil];}
+    
+    NSMutableArray *Y2 = [[NSMutableArray alloc]init];
+    
+    for(int i=0; i<arrayY2.count;i++) {
+        double var = [arrayY2[i] doubleValue];
+        BubbleChartDataEntry *entry = [[BubbleChartDataEntry alloc]initWithX:(double)i y:var size:1.0];
+        [Y2 addObject:entry];
+        
+    }
+    BubbleChartDataSet *set1 = [[BubbleChartDataSet alloc]initWithValues:Y1 label:nil];
+    [set1 setColor:[UIColor purpleColor]alpha:0.5];
+    BubbleChartDataSet *set2 = [[BubbleChartDataSet alloc]initWithValues:Y2 label:nil];
+    [set2 setColor:[UIColor orangeColor]alpha:0.5];
+    NSMutableArray *dataSets = [[NSMutableArray alloc] init];
+    [dataSets addObject:set1];
+    [dataSets addObject:set2];
+    BubbleChartData *data = [[BubbleChartData alloc]initWithDataSets:dataSets];
+    return data;
+}
+
+-(BubbleChartView *)drawBubbleChart:(NSArray *)weekCountForAll
+{
+    BubbleChartData *data = [[BubbleChartData alloc]init];
+
+    data = [self setDataforBubble:weekCountForAll];
+    BubbleChartView *bubbleView = [[BubbleChartView alloc]init];
+    ChartXAxis *xAxis = bubbleView.xAxis;
+    xAxis.labelPosition = XAxisLabelPositionBottom;//X轴的显示位置，默认是显示在上面的
+    bubbleView.rightAxis.enabled = NO;//不绘制右边轴
+    bubbleView.doubleTapToZoomEnabled =NO;
+    [bubbleView setDragEnabled:NO];
+    xAxis.drawGridLinesEnabled = NO;//不绘制网格线
+    bubbleView.data = data;
+    return bubbleView;
 }
 
 @end

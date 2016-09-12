@@ -38,13 +38,22 @@
     _BJImage.userInteractionEnabled = YES;
     UITapGestureRecognizer *singleTap =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClickImage)];
     [_BJImage addGestureRecognizer:singleTap];
-    [self backImageDown:^{}];
     self.cv = [[ChartView alloc]init];
+
+    if(self.needBackImage) {
+        [self backImageDown:^{
+            [self backImage];
+            
+        }];
+        self.needBackImage = NO;
+    }else{
+        [self backImageDown:^{}];
+    }
 }
-    
+
 -(void)setPieChartView
 {
-    if(_pieChartView != nil)
+    if(_pieChartView)
     {
         [_pieChartView removeFromSuperview];
     }
@@ -69,11 +78,11 @@
     [super viewWillAppear:animated];
     self.isActive = YES;
     [_BJImage setImage:_image];
+    
     if (self.needBackImage) {
         [self backImage];
         self.needBackImage = NO;
     }
-
     //友盟页面统计
     [MobClick beginLogPageView:@"状态页面"];
 
@@ -87,6 +96,11 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"setStatusUpdate" object:nil];
     //结束友盟页面统计
     [MobClick endLogPageView:@"状态页面"];
+}
+
+-(void)dealloc
+{
+    [[NSUserDefaults standardUserDefaults]setBool:self.statusUpadate forKey:@"statusUpdateLastTime"];
 }
 
 -(void)backImageDown:(void(^)(void))needBack

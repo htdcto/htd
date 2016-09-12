@@ -11,4 +11,6 @@
 @interface ChartView : NSObject
 -(LineChartView *)drawLineChart:(NSArray *)weekCountForAll;
 -(PieChartView *)drawPieChart:(NSArray *)dayCountForAll;
+-(BubbleChartView *)drawBubbleChart:(NSArray *)dataSource;
+
 @end
