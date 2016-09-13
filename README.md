@@ -77,4 +77,4 @@ cn.Ta.HaiTuDeng.com-Bridging-Header  基于Swift图形绘制组件的OC桥接文
 
 2:专家打赏功能demo（不接入支付）（熊）
 
-3:提醒功能缓存化，只在第一次登入时有显示，修改此bug（熊）
+3:提醒功能缓存化，只在第一次登入时有显示，修改此bug（熊）   ✅

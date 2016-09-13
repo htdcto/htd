@@ -13,11 +13,11 @@
 #define HEIGHT [UIScreen mainScreen].bounds.size.height
 
 @interface RankViewController ()
-@property(nonatomic,strong)NSArray *rank;
 @property(nonatomic,strong)NSDictionary *dic;
-@property(nonatomic,strong)NSString *Uname;
-@property(nonatomic,strong)NSString *Tname;
-@property(nonatomic,strong)NSString *rankNum;
+@property(nonatomic,strong)NSString *Mname;
+@property(nonatomic,strong)NSString *Wname;
+@property(nonatomic,strong)NSString *Coefficient;
+
 @end
 
 @implementation RankViewController
@@ -30,25 +30,7 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"RankViewCell" bundle:nil] forCellReuseIdentifier:@"Cell"];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = [UIColor whiteColor];
-    [self getRank];
 }
-
--(void)getRank
-{
-    [LDXNetWork GetThePHPWithURL:address(@"/rank.php") par:nil success:^(id responseObject) {
-        if ([responseObject[@"success"]isEqualToString:@"1"]) {
-            _rank = responseObject[@"rank"];
-            [self.tableView reloadData];
-        }
-        else
-        {
-            NSLog(@"服务器数据库错误");
-        }
-    }error:^(NSError *error) {
-        NSLog(@"访问服务器错误");
-    }];
-}
-
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -58,18 +40,26 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     RankViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+
     _dic = _rank[indexPath.row];
-    _Uname = [_dic objectForKey:@"Utel"];
-    _Tname = [_dic objectForKey:@"Ttel"];
-    _rankNum = [_dic objectForKey:@"rank"];
-    cell.fristName.text = _Uname;
-    cell.secondeName.text = _Tname;
-   // cell.rank.text = _rankNum;
+    _Mname = [_dic objectForKey:@"Mtel"];
+    _Wname = [_dic objectForKey:@"Wtel"];
+    _Coefficient = [_dic objectForKey:@"Coefficient"];
+
+    cell.fristName.text = _Mname;
+    cell.secondeName.text = _Wname;
+    cell.rank.text = _Coefficient;
     cell.fristImage.image = [UIImage imageNamed:@"Man"];
     cell.secondImage.image = [UIImage imageNamed:@"WoMan"];
     
     cell.accessoryType = UITableViewCellSeparatorStyleSingleLine;
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.ovc drawOtherPieChart:indexPath.row];
+    [self.ovc drawOtherBubbleChart:indexPath.row];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

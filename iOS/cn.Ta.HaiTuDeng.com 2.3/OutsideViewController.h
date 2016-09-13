@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RankViewController.h"
 
 @interface OutsideViewController : UIViewController
 
-
-
+-(void)drawOtherPieChart:(NSInteger)index;
+-(void)drawOtherBubbleChart:(NSInteger)index;
 @end

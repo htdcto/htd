@@ -15,8 +15,12 @@
 
 @property (nonatomic,strong) PieChartView *ourPieChartView;
 @property (nonatomic,strong) BubbleChartView *ourBubbleChartView;
-@property (nonatomic,strong) PieChartView *otherPieChartView;
-@property (nonatomic,strong) BubbleChartView *otherBubbleChartView;
+@property (nonatomic,strong) PieChartView *otherSelectedPieChartView;
+@property (nonatomic,strong) BubbleChartView *otherSelectedBubbleChartView;
+@property (nonatomic,strong) NSArray *rankArr;
+@property (nonatomic,strong) NSDictionary *ourDic;
+@property (nonatomic,strong) NSDictionary *otherSelectedDic;
+
 
 
 @property (nonatomic,strong)ChartView *cv;
@@ -29,25 +33,54 @@
 {
     [super viewDidLoad];
     self.rvc = [[RankViewController alloc]init];
+    self.rvc.ovc = self;
     self.rvc.view.frame  = CGRectMake(50, 100,[UIScreen mainScreen].bounds.size.width, 200);
     self.cv = [[ChartView alloc]init];
     [self.view addSubview:self.rvc.view];
-    [self drawourPieChart];
-    [self drawOurBubbleChart];
-    [self drawOtherPieChart];
-    [self drawOtherBubbleChart];
+    
+    [self getDataSource:^{
+
+        [self drawourPieChart];
+        [self drawOurBubbleChart];
+    }];
+
+    //[self drawOtherPieChart];
+    //[self drawOtherBubbleChart];
+}
+
+-(void)getDataSource:(void(^)(void))reponse
+{
+    [LDXNetWork GetThePHPWithURL:address(@"/rank.php") par:nil success:^(id responseObject) {
+            if ([responseObject[@"success"]isEqualToString:@"1"]) {
+                _rankArr = responseObject[@"rank"];
+                self.rvc.rank = _rankArr;
+                [self.rvc.tableView reloadData];
+                
+                NSString *Uname = [[NSUserDefaults standardUserDefaults]objectForKey:@"name"];
+                //判断数组中那一个字典是自己伴侣的数据，返回给ovc.
+                for (NSDictionary *dic in _rankArr) {
+                    if (Uname == dic[@"Mtel"] || Uname == dic[@"Wtel"]) {
+                        _ourDic = dic;
+                    }
+                }
+                
+                reponse();
+            }
+            else
+            {
+                NSLog(@"服务器数据库错误");
+            }
+        }error:^(NSError *error) {
+            NSLog(@"访问服务器错误");
+    }];
+    
 }
 
 -(void)drawourPieChart
 {
-    if(_ourPieChartView)
-    {
-        [_ourPieChartView removeFromSuperview];
-    }
-    
-    NSNumber *Ucount = [NSNumber numberWithInteger:5];
-    NSNumber *Tcount = [NSNumber numberWithInteger:10];
-    NSArray *dataSource = [[NSArray alloc]initWithObjects:Ucount,Tcount,nil];
+    NSString *Mcount = _ourDic[@"Mstatus"];
+    NSString *Wcount = _ourDic[@"Wstatus"];
+    NSArray *dataSource = [[NSArray alloc]initWithObjects:Mcount,Wcount,nil];
     self.ourPieChartView = [self.cv drawPieChart:dataSource];
     
     [self.view addSubview:(self.ourPieChartView)];
@@ -61,11 +94,11 @@
 
 -(void)drawOurBubbleChart
 {
-    NSString *u = @"5";
-    NSString *t = @"10";
-    NSArray *U = [[NSArray alloc]initWithObjects:u, nil];
-    NSArray *T = [[NSArray alloc]initWithObjects:t, nil];
-    NSArray *dataSource = [[NSArray alloc]initWithObjects:U,T ,nil];
+    NSString *m = _ourDic[@"Mheart"];
+    NSString *w = _ourDic[@"Wheart"];
+    NSArray *M = [[NSArray alloc]initWithObjects:m, nil];
+    NSArray *W = [[NSArray alloc]initWithObjects:w, nil];
+    NSArray *dataSource = [[NSArray alloc]initWithObjects:M,W ,nil];
     
     
     self.ourBubbleChartView.backgroundColor = [[UIColor alloc] colorWithAlphaComponent:0];
@@ -78,20 +111,21 @@
     }];
 }
 
--(void)drawOtherPieChart;
+-(void)drawOtherPieChart:(NSInteger)index
 {
-    if(_otherPieChartView)
+    if(_otherSelectedPieChartView)
     {
-        [_otherPieChartView removeFromSuperview];
+        [_otherSelectedPieChartView removeFromSuperview];
     }
     
-    NSNumber *Ucount = [NSNumber numberWithInteger:5];
-    NSNumber *Tcount = [NSNumber numberWithInteger:10];
-    NSArray *dataSource = [[NSArray alloc]initWithObjects:Ucount,Tcount,nil];
-    self.otherPieChartView = [self.cv drawPieChart:dataSource];
+    NSDictionary *otherDic = _rankArr[index];
+    NSString *Mcount = otherDic[@"Mstatus"];
+    NSString *Wcount = otherDic[@"Wstatus"];
+    NSArray *dataSource = [[NSArray alloc]initWithObjects:Mcount,Wcount,nil];
+    self.otherSelectedPieChartView = [self.cv drawPieChart:dataSource];
     
-    [self.view addSubview:(self.otherPieChartView)];
-    [self.otherPieChartView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:(self.otherSelectedPieChartView)];
+    [self.otherSelectedPieChartView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(150,150));
         make.top.equalTo(self.rvc.view.mas_bottom);
         make.right.equalTo(self.view.mas_right);
@@ -99,21 +133,26 @@
 
 }
 
--(void)drawOtherBubbleChart
+-(void)drawOtherBubbleChart:(NSInteger)index
 {
-    NSString *u = @"5";
-    NSString *t = @"10";
-    NSArray *U = [[NSArray alloc]initWithObjects:u, nil];
-    NSArray *T = [[NSArray alloc]initWithObjects:t, nil];
-    NSArray *dataSource = [[NSArray alloc]initWithObjects:U,T ,nil];
+    if(_otherSelectedBubbleChartView)
+    {
+        [_otherSelectedBubbleChartView removeFromSuperview];
+    }
+    NSDictionary *otherDic = _rankArr[index];
+    NSString *m = otherDic[@"Mheart"];
+    NSString *w = otherDic[@"Wheart"];
+    NSArray *M = [[NSArray alloc]initWithObjects:m, nil];
+    NSArray *W = [[NSArray alloc]initWithObjects:w, nil];
+    NSArray *dataSource = [[NSArray alloc]initWithObjects:M,W ,nil];
     
     
-    self.otherBubbleChartView.backgroundColor = [[UIColor alloc] colorWithAlphaComponent:0];
-    self.otherBubbleChartView = [self.cv drawBubbleChart:dataSource];
-    [self.view addSubview:(self.otherBubbleChartView)];
-    [self.otherBubbleChartView mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.otherSelectedBubbleChartView.backgroundColor = [[UIColor alloc] colorWithAlphaComponent:0];
+    self.otherSelectedBubbleChartView = [self.cv drawBubbleChart:dataSource];
+    [self.view addSubview:(self.otherSelectedBubbleChartView)];
+    [self.otherSelectedBubbleChartView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo((CGSizeMake(150, 150)));
-        make.top.equalTo(self.otherPieChartView.mas_bottom);
+        make.top.equalTo(self.otherSelectedPieChartView.mas_bottom);
         make.right.equalTo(self.view.mas_right);
     }];
 }

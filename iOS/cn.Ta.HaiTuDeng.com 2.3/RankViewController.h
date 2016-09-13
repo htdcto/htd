@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OutsideViewController.h"
 
 @interface RankViewController : UITableViewController
 
 @property (nonatomic,strong)UITableView *tableView;
+@property(nonatomic,strong)NSArray *rank;
 
+@property (nonatomic,weak) OutsideViewController *ovc;
 @end
