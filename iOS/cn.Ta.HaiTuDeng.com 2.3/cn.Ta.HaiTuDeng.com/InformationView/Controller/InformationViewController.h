@@ -15,8 +15,6 @@
 
 //列表
 @property (nonatomic,strong)UITableView *tableView;
-
-
 //服务器获取数据源
 @property (nonatomic,strong)NSMutableArray *dataArray;
 //网址

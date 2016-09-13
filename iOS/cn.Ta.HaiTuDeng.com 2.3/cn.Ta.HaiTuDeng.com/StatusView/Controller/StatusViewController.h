@@ -10,8 +10,7 @@
 
 @interface StatusViewController : UIViewController
 @property (strong, nonatomic) IBOutlet UIImageView *BJImage;
-@property  NSInteger Ucount;
-@property  NSInteger Tcount;
+
 
 @property BOOL isActive;
 @property BOOL statusUpadate;

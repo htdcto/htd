@@ -22,7 +22,8 @@
 @property (nonatomic,strong)PieChartView *pieChartView;
 @property (nonatomic,strong)ChartView *cv;
 @property (nonatomic,strong)UPImageViewController *upvc;
-
+@property  NSInteger Ucount;
+@property  NSInteger Tcount;
 
 
 @end

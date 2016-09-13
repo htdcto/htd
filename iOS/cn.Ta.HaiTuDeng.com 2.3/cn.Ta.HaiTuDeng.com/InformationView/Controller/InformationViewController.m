@@ -24,9 +24,7 @@
 @property (nonatomic,strong)NSString *_Uname;
 @property (nonatomic,strong)NSString *Url;
 
-
 @property BOOL localLoad;
-
 
 @end
 

@@ -19,18 +19,20 @@
 @property (strong,nonatomic) ChartView *chartView;
 @property (strong,nonatomic) BubbleChartView *linechart;
 @property (nonatomic,strong) BubbleChartView *bubbleChart;
-@property (nonatomic,strong) NSString* locationString;
 @property (nonatomic,strong) NSString * filepath;//tamax.plist,装对方数据
+@property (nonatomic,strong)NSMutableArray *dataArray;//数据源
+@property (nonatomic,strong)NSDate *dataString;//标题
 @property (nonatomic,strong) NSTimer* timer;// 定义倒计时实现定时器
-@property (nonatomic,strong) NSDate * date;//当前时间
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) UILabel *label;//当日点击时间列表
 @property (nonatomic,assign) UIModalTransitionStyle UIModalTransitionStyleFlipHorizontal;
-
 @property (strong,nonatomic) NSString *user;
 @property (strong,nonatomic) Helper *helper;
 
 
+
+
+@property (nonatomic,strong) NSDate * date;//当前时间
 @property (nonatomic,strong) NSDate *currentDate;
 @property (nonatomic,strong) NSDate *searchingDate;
 @property (nonatomic,strong) NSDate *BdTime;
@@ -260,10 +262,7 @@ static MainAryViewController *mavc;
 //----------------------------列表---------------------------------
 
 -(void)createTableView{
-    
-//    self.automaticallyAdjustsScrollViewInsets = NO;
     //PCH 预编译文件
-    
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width - 95, [UIScreen mainScreen].bounds.size.height - 225, 86,166) style:UITableViewStylePlain];
     
     self.tableView.backgroundColor = [UIColor colorWithRed:(242/255.0f) green:(242/255.0f) blue:(242/255.0f) alpha:0.5];
@@ -277,7 +276,6 @@ static MainAryViewController *mavc;
     _label = [[UILabel alloc]initWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width - 95, [UIScreen mainScreen].bounds.size.height - 243, 86, 18)];
     
     _label.backgroundColor = [UIColor colorWithRed:(200/255.0f) green:(180/255.0f) blue:(180/255.0f) alpha:0.3];
-    
   
     NSDateFormatter * formatter1 = [[NSDateFormatter alloc ] init];
     [formatter1 setDateFormat:@"YY年MM月dd日"];
@@ -301,13 +299,13 @@ static MainAryViewController *mavc;
     [self.tableView registerNib:[UINib nibWithNibName:@"MainTableViewCell" bundle:nil] forCellReuseIdentifier:@"BASE"];
     
     UISwipeGestureRecognizer *swipeGestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(tableSwipe:)];
-    //设置轻扫的方向
-    swipeGestureLeft.direction = UISwipeGestureRecognizerDirectionLeft; //默认向右
+    //设置滑动的方向
+    swipeGestureLeft.direction = UISwipeGestureRecognizerDirectionLeft; //向右
     [self.tableView addGestureRecognizer:swipeGestureLeft];
     
     UISwipeGestureRecognizer *swipeGestureRinght = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(tableSwipe:)];
-    //设置轻扫的方向
-    swipeGestureRinght.direction = UISwipeGestureRecognizerDirectionRight; //默认向右
+    //设置滑动的方向
+    swipeGestureRinght.direction = UISwipeGestureRecognizerDirectionRight; //向右
     [self.tableView addGestureRecognizer:swipeGestureRinght];
 
 }
@@ -361,8 +359,6 @@ static MainAryViewController *mavc;
 -(void)tableSwipe:(id)sender
 {
     UISwipeGestureRecognizer *swipe = sender;
-    
-    
     if (swipe.direction == UISwipeGestureRecognizerDirectionLeft)
     {
         if(self.searchingDate != self.currentDate)
@@ -513,8 +509,10 @@ static MainAryViewController *mavc;
     self.linechart = [_chartView drawBubbleChart:weekCountForAll];
     [self.view addSubview:(self.linechart)];
     [self.linechart mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo((CGSizeMake(self.view.bounds.size.width-80, 170)));
-        make.center.mas_equalTo(CGPointMake(-50, 200));
+        make.top.equalTo(_TimeLabel.mas_bottom).offset(2);
+        make.bottom.equalTo(self.view.mas_bottom).offset(-40);
+        make.left.equalTo(self.view.mas_left);
+        make.right.equalTo(_TimeView.mas_left);
     }];
 
 

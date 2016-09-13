@@ -218,21 +218,15 @@ BOOL full;
 //气泡图
 -(BubbleChartData *)setDataforBubble:(NSArray *)dataSource
 {
-    //NSMutableArray *arrayX=[[NSMutableArray alloc]init];
-    //arrayX = dataSource[2];
-    //ChartDefaultAxisValueFormatter *ss = [[ChartDefaultAxisValueFormatter alloc]init];
-    
-    
     NSMutableArray *arrayY1=[[NSMutableArray alloc]init];
     arrayY1=dataSource[0];
     if(arrayY1==nil)
     {arrayY1=[NSMutableArray arrayWithObjects:@0,nil];}
-    NSLog(@"uuuuuuuuuuuuuuu%@",arrayY1);
     NSMutableArray *Y1 = [[NSMutableArray alloc]init];
     
     for(int i=0; i<arrayY1.count;i++) {
         double var = [arrayY1[i] doubleValue];
-        BubbleChartDataEntry *entry = [[BubbleChartDataEntry alloc]initWithX:(double)i y:var size:0.5];
+        BubbleChartDataEntry *entry = [[BubbleChartDataEntry alloc]initWithX:(double)i+1 y:var size:1.0 data:@"dd"];
         [Y1 addObject:entry];
         
     }
@@ -241,19 +235,24 @@ BOOL full;
     arrayY2=dataSource[1];
     if(arrayY2==nil)
     {arrayY2=[NSMutableArray arrayWithObjects:@0,nil];}
-        NSLog(@"ttttttttttttttttttt%@",arrayY2);
     NSMutableArray *Y2 = [[NSMutableArray alloc]init];
     
     for(int i=0; i<arrayY2.count;i++) {
         double var = [arrayY2[i] doubleValue];
-        BubbleChartDataEntry *entry = [[BubbleChartDataEntry alloc]initWithX:(double)i y:var size:1.0];
+        BubbleChartDataEntry *entry = [[BubbleChartDataEntry alloc]initWithX:(double)i+1 y:var size:1.0];
         [Y2 addObject:entry];
         
     }
-    BubbleChartDataSet *set1 = [[BubbleChartDataSet alloc]initWithValues:Y1 label:nil];
+    BubbleChartDataSet *set1 = [[BubbleChartDataSet alloc]initWithValues:Y1];
     [set1 setColor:[UIColor purpleColor]alpha:0.5];
-    BubbleChartDataSet *set2 = [[BubbleChartDataSet alloc]initWithValues:Y2 label:nil];
+    [set1 set_yMax:12];
+    set1.drawValuesEnabled = NO;
+    
+    BubbleChartDataSet *set2 = [[BubbleChartDataSet alloc]initWithValues:Y2];
     [set2 setColor:[UIColor orangeColor]alpha:0.5];
+    [set2 set_yMax:12];
+    set2.drawValuesEnabled = NO;
+    
     NSMutableArray *dataSets = [[NSMutableArray alloc] init];
     [dataSets addObject:set1];
     [dataSets addObject:set2];
@@ -264,15 +263,16 @@ BOOL full;
 -(BubbleChartView *)drawBubbleChart:(NSArray *)weekCountForAll
 {
     BubbleChartData *data = [[BubbleChartData alloc]init];
-
     data = [self setDataforBubble:weekCountForAll];
     BubbleChartView *bubbleView = [[BubbleChartView alloc]init];
-    ChartXAxis *xAxis = bubbleView.xAxis;
-    xAxis.labelPosition = XAxisLabelPositionBottom;//X轴的显示位置，默认是显示在上面的
+    
+    bubbleView.xAxis.gridColor = [[UIColor purpleColor]colorWithAlphaComponent:1];
+    bubbleView.xAxis.labelPosition = XAxisLabelPositionBottom;//X轴的显示位置，默认是显示在上面的
+    bubbleView.leftAxis.gridColor = [[UIColor purpleColor]colorWithAlphaComponent:1];
+    bubbleView.rightAxis.gridColor = [[UIColor purpleColor]colorWithAlphaComponent:1];
     bubbleView.rightAxis.enabled = NO;//不绘制右边轴
     bubbleView.doubleTapToZoomEnabled =NO;
     [bubbleView setDragEnabled:NO];
-    xAxis.drawGridLinesEnabled = NO;//不绘制网格线
     bubbleView.data = data;
     return bubbleView;
 }
