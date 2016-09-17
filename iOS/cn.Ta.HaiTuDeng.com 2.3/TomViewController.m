@@ -14,6 +14,7 @@
 #import "EMError.h"
 #import "EMSDK.h"
 #import "OutsideViewController.h"
+#import "DB.h"
 
 @interface TomViewController ()<EMChatManagerDelegate>
 
@@ -54,23 +55,29 @@
 
 - (void)tuchu {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    EMError *error = [[EMClient sharedClient] logout:YES];
-    if (error != nil){
-        NSLog(@"%@",error);
-    }else{
-        NSLog(@"退出成功");
-        //移除UserDefaults中存储的用户信息
-        [userDefaults removeObjectForKey:@"name"];
-        [userDefaults removeObjectForKey:@"password"];
-        [userDefaults removeObjectForKey:@"Ttel"];
-        [userDefaults synchronize];
-        
-        //登出友盟
-        [MobClick profileSignOff];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_LOGINCHANGE object:@NO];
+    if ([[EMClient sharedClient] isLoggedIn]) {
+        EMError *error = [[EMClient sharedClient] logout:YES];
+        if (error != nil){
+            NSLog(@"%@",error);
+        }else{
+            NSLog(@"退出成功");
+            //移除UserDefaults中存储的用户信息
+            [userDefaults removeObjectForKey:@"name"];
+            [userDefaults removeObjectForKey:@"password"];
+            [userDefaults removeObjectForKey:@"Ttel"];
+            [userDefaults removeObjectForKey:@"BDTime"];
+            [userDefaults removeObjectForKey:@"expert"];
+            [userDefaults synchronize];
+            
+            DB *db = [DB shareInit];
+            
+            
+            //登出友盟
+            [MobClick profileSignOff];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_LOGINCHANGE object:@NO];
+        }
     }
-    
 }
 
 #pragma mark - Table view datasource

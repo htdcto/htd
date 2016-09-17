@@ -19,8 +19,6 @@ NSString *const UpdateBackImage = @"UpdateBackImage";
 //更改状态图片后的cmd命令
 NSString *const UpdateStatusImage = @"UpdateStatusImage";
 
-//判断是否为刚登录的设置，给环信cmd回调提供指示
-Boolean JustLogin = YES;
 
 
 //登录时寄存环信监听代理回调的数据
@@ -34,8 +32,11 @@ NSString *extern_agreename = nil;
 //得到好友拒绝的名字
 NSString *extern_declinename = nil;
 
+BOOL alreadyBind = NO;
+
 NSInteger mavcCount = 0;
 
 BOOL updateStatus = NO;
+
 
 @end

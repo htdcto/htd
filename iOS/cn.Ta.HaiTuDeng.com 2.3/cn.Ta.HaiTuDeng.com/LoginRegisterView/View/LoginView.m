@@ -297,16 +297,9 @@
 #pragma mark - registerbuttonAction
 - (void)registerButtonAction:(UIButton *)sender
 {
-    self.regist = [[RegisterView alloc] initWithFrame:CGRectMake(0, screenNowH, self.frame.size.width, self.frame.size.height)];
-    
-    // 注册页面注册按钮点击方法
-    [_regist.registerButton addTarget:self action:@selector(registerAction) forControlEvents:UIControlEventTouchUpInside];
-    
-    // 注册页面其实是盖在登录页面上的
-    [self addSubview:_regist];
-    [UIView animateWithDuration:1.0 animations:^{
-        _regist.frame = self.frame;
-    }];
+    if ([self.delegate respondsToSelector:@selector(goRegisterView)]) {
+        [self.delegate goRegisterView];
+    }
 }
 
 
@@ -324,31 +317,7 @@
     // 给外部调用的地方, 利用代理协议把登录信息传递到viewController代理人那里
     [self.delegate Login:_nameTextF.text pass:_passWordF.text];
     
-}
-
-
-- (void)registerAction
-{
-    // 判断注册页面控件里是否都有值
-    if ([_regist.nameTextF.text isEqualToString:@""] || [_regist.passTextF.text isEqualToString:@""] ) {
-        UIViewController *theVC = [self theViewController];
-        [theVC showTheAlertView:theVC andAfterDissmiss:1.5 title:@"请输入帐号或密码" message:@""];
-        return;
-    }
     
-    // 返回注册的信息
-    [self.delegate getRegisterName:_regist.nameTextF.text pass:_regist.passTextF.text image:self.regist.headerImageButton.imageView.image];
 }
-
-// 返回到登录页面
-- (void)goToLoginView
-{
-    // 返回值到登录页面
-    self.nameTextF.text = self.regist.nameTextF.text;
-    self.passWordF.text = self.regist.passTextF.text;
-    [self.regist removeFromSuperview];
-}
-
-
 
 @end

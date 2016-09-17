@@ -78,6 +78,7 @@
         _registerButton.backgroundColor = colorRGBA(8, 122, 252, 0.5);
         _registerButton.layer.cornerRadius = 15;
         [_registerButton setTitle:@"注  册" forState:UIControlStateNormal];
+        [_registerButton addTarget:self action:@selector(registerAction) forControlEvents:UIControlEventTouchUpInside];
         [_registerButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.passTextF.mas_bottom).offset(30 * screenH);
             make.centerX.equalTo(self.passTextF.mas_centerX);
@@ -111,7 +112,7 @@
     if (_manChoose == nil) {
         self.manChoose = [UIButton buttonWithType:UIButtonTypeCustom];
         [_manChoose setImage:[UIImage imageNamed:@"Man.png"] forState:UIControlStateNormal];
-        [_manChoose addTarget:self action:@selector(setManSex) forControlEvents:UIControlEventTouchUpInside];
+        [_manChoose addTarget:self action:@selector(setMan) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_manChoose];
         [_manChoose mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.registerButton.mas_bottom).offset(60 * screenH);
@@ -127,9 +128,9 @@
 - (UIButton *)womanChoose
 {
     if (_womanChoose == nil) {
-        self.womanChoose = [UIButton buttonWithType:UIButtonTypeCustom];
+        _womanChoose = [UIButton buttonWithType:UIButtonTypeCustom];
         [_womanChoose setImage:[UIImage imageNamed:@"WoMan.png"] forState:UIControlStateNormal];
-        [_womanChoose addTarget:self action:@selector(setWomanSex) forControlEvents:UIControlEventTouchUpInside];
+        [_womanChoose addTarget:self action:@selector(setWoman) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_womanChoose];
         [_womanChoose mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.registerButton.mas_bottom).offset(60 * screenH);
@@ -156,6 +157,19 @@
     return textField;
 }
 
+-(void)setWoman
+{
+    self.sex = @"0";
+    _womanChoose.selected = YES;
+    _manChoose.selected = NO;
+}
+
+-(void)setMan
+{
+    self.sex = @"1";
+    _womanChoose.selected = NO;
+    _manChoose.selected = YES;
+}
 
 #pragma mark - init
 - (instancetype)init
@@ -212,11 +226,58 @@
 #pragma mark - imagepickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
-    // 获取图片数据
-    UIImage *ima = info[UIImagePickerControllerEditedImage];
-    // 给button按钮改变图片
-    [self.headerImageButton setImage:ima forState:UIControlStateNormal];
-    [picker dismissViewControllerAnimated:YES completion:nil];
+
+    [picker dismissViewControllerAnimated:YES completion:^{
+        
+        // 获取图片数据
+        UIImage *ima = info[UIImagePickerControllerEditedImage];
+        
+        
+        //压缩
+        if (ima) {
+            ima = info[UIImagePickerControllerOriginalImage];
+        }
+        UIGraphicsBeginImageContext(CGSizeMake(120, 120));
+        [ima drawInRect:CGRectMake(0, 0, 120, 120)];
+        _smallImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString *headerPath = [cachePath stringByAppendingPathComponent:@"headerImage"];
+        NSData *headerData = UIImageJPEGRepresentation(_smallImage, 1.0);
+        [headerData writeToFile:headerPath atomically:YES];
+        // 给button按钮改变图片
+        [self.headerImageButton setImage:_smallImage forState:UIControlStateNormal];
+    }];
+}
+
+- (void)registerAction
+{
+    UIViewController *selfVC = [self theViewController];
+    // 判断注册页面控件里是否都有值
+    if ([_nameTextF.text isEqualToString:@""] || [_passTextF.text isEqualToString:@""]) {
+        [selfVC showTheAlertView:selfVC andAfterDissmiss:1.5 title:@"请输入帐号或密码" message:@""];
+        return;
+    }
+    
+    if (self.smallImage == nil) {
+        [selfVC showTheAlertView:selfVC andAfterDissmiss:1.5 title:@"请上传头像" message:@""];
+        return;
+    }
+    
+    if(self.sex == nil)
+    {
+        [selfVC showTheAlertView:selfVC andAfterDissmiss:1.5 title:@"请选择性别" message:@""];
+        return;
+    }
+    
+    // 返回注册的信息
+    if ([self.delegate respondsToSelector:@selector(clickedRegisterView:name:pwd:sex:image:)]) {
+        NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString *headerPath = [cachePath stringByAppendingPathComponent:@"headerImage"];
+        UIImage *headerImage = [UIImage imageWithContentsOfFile:headerPath];
+        [self.delegate clickedRegisterView:self name:_nameTextF.text pwd:_passTextF.text sex:self.sex image:headerImage];
+    }
 }
 
 

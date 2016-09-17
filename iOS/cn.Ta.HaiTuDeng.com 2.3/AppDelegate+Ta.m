@@ -45,8 +45,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     BOOL loginSuccess = [notification.object boolValue];
     if(loginSuccess){//登录成功加载主窗口控制器
-        NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
-        if([user objectForKey:@"Ttel"]){
             if(self.mainController == nil){
                 self.mainController = [[MainViewController alloc]init];
                 self.navigationController = [[UINavigationController alloc]initWithRootViewController:self.mainController];
@@ -56,7 +54,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
             }
             [Helper shareHelper].mainVC = self.mainController;
         }
-    }
     else{//登录失败加载登录页面控制器
         if(self.mainController){
             [self.mainController.navigationController popToRootViewControllerAnimated:NO];

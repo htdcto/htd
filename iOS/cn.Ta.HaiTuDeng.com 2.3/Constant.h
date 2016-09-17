@@ -16,14 +16,14 @@ extern NSString *const UpdateStatusImage;
 
 extern UIImage *image;
 
-extern Boolean JustLogin;
-
 extern NSString *extern_name;
 extern NSString *extern_alert;
 
 extern NSString *extern_agreename;
 
 extern NSString *extern_declinename;
+
+extern BOOL alreadyBind;
 
 //各个页面的回调信息数
 //首页点心计数

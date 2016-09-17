@@ -44,28 +44,15 @@
                         <action selector="SQBtn:" destination="-1" eventType="touchUpInside" id="VT0-YL-nuD"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zKX-Tz-Uol">
-                    <rect key="frame" x="100" y="320" width="400" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="30" id="OUP-Vj-muL"/>
-                    </constraints>
-                    <state key="normal" title="切换帐号"/>
-                    <connections>
-                        <action selector="QHBtn:" destination="-1" eventType="touchUpInside" id="AS5-VD-vQA"/>
-                    </connections>
-                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="lq7-cv-sf4" secondAttribute="trailing" constant="100" id="6S6-ry-Ajg"/>
-                <constraint firstAttribute="trailing" secondItem="zKX-Tz-Uol" secondAttribute="trailing" constant="100" id="IBL-Ho-Zta"/>
                 <constraint firstAttribute="trailing" secondItem="YWL-Nl-A9o" secondAttribute="trailing" constant="100" id="Tw1-2T-krW"/>
                 <constraint firstItem="YOl-ss-ZoN" firstAttribute="top" secondItem="lq7-cv-sf4" secondAttribute="bottom" constant="50" id="UBV-f3-XHz"/>
                 <constraint firstItem="YWL-Nl-A9o" firstAttribute="top" secondItem="YOl-ss-ZoN" secondAttribute="bottom" constant="50" id="VbC-0W-BCr"/>
                 <constraint firstAttribute="trailing" secondItem="YOl-ss-ZoN" secondAttribute="trailing" constant="100" id="aoL-fD-em8"/>
-                <constraint firstItem="zKX-Tz-Uol" firstAttribute="top" secondItem="YWL-Nl-A9o" secondAttribute="bottom" constant="50" id="lEC-Yy-H0y"/>
                 <constraint firstItem="lq7-cv-sf4" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="80" id="ove-I4-YKQ"/>
-                <constraint firstItem="zKX-Tz-Uol" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="100" id="sGz-QR-3ip"/>
                 <constraint firstItem="YOl-ss-ZoN" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="100" id="sbF-hA-5Q9"/>
                 <constraint firstItem="lq7-cv-sf4" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="100" id="tPv-Cs-HMs"/>
                 <constraint firstItem="YWL-Nl-A9o" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="100" id="wby-01-qcd"/>

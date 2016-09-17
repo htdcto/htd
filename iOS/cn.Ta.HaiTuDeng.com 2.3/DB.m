@@ -91,10 +91,7 @@
             }
         }
         
-        if (response)
-        {
             response();
-        }
         
     } error:^(NSError *error) {
         NSLog(@"登录失败的原因:%@",error);
@@ -102,18 +99,39 @@
     
 }
 
--(void)openOrCreateDB
+-(void)createDBPath
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *Uname = [userDefaults objectForKey:@"name"];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documents = [paths objectAtIndex:0];
+    
     NSString *Udocuments = [NSString stringWithFormat:@"%@/%@", documents,Uname];
     NSString *U_DBname = [NSString stringWithFormat:@"%@-%@",Uname,DBNAME];
-    _DBpath = [Udocuments stringByAppendingPathComponent:U_DBname];
+    _DBpath = [[documents stringByAppendingPathComponent:Uname] stringByAppendingPathComponent:U_DBname];
+    //    _DBpath = [Udocuments stringByAppendingPathComponent:U_DBname];
     NSLog(@"登录时创建或者打开数据库：%@",_DBpath);
     
-    if(sqlite3_open([_DBpath UTF8String], &db) ==SQLITE_OK)
+    BOOL isDirectory = YES;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:Udocuments isDirectory:&isDirectory]) {
+        
+        [[NSFileManager defaultManager]createDirectoryAtPath:Udocuments withIntermediateDirectories:YES attributes:nil error:nil];
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:_DBpath]) {
+            
+            if(![[NSFileManager defaultManager] createFileAtPath:_DBpath contents:nil attributes:nil]){
+                
+                NSLog(@"Error was code: %d - message: %s", errno, strerror(errno));
+            }
+        }
+    }
+    
+
+}
+
+-(void)openOrCreateDB
+{
+    if(sqlite3_open([_DBpath UTF8String], &db) == SQLITE_OK)
     {
         NSString *sqlCreateTable_UTIME = @"CREATE TABLE IF NOT EXISTS UTIME(ID INTEGER PRIMARY KEY AUTOINCREMENT,time varchar(30))";
         NSString *sqlCreateTable_TTIME =@"CREATE TABLE IF NOT EXISTS TTIME(ID INTEGER PRIMARY KEY AUTOINCREMENT,time varchar(30))";
@@ -123,19 +141,21 @@
     }
     else
     {
+        NSLog(@"%s",sqlite3_errmsg(db));
         NSLog(@"打开数据库失败");
     }
-}
+
+   }
 
 
 -(void)execSql:(NSString *)sql
 {
-    char *err;
-    if(sqlite3_exec(db,[sql UTF8String],NULL,NULL,&err) !=SQLITE_OK)
-    {
-        sqlite3_close(db);
-        NSLog(@"操作数据库失败");
-    }
+        char *err;
+        if(sqlite3_exec(db,[sql UTF8String],NULL,NULL,&err) !=SQLITE_OK)
+        {
+            sqlite3_close(db);
+            NSLog(@"操作数据库失败");
+        }
 }
 
 

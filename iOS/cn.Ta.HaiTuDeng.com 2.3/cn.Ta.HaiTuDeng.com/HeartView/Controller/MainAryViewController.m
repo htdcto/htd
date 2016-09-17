@@ -98,8 +98,10 @@ static MainAryViewController *mavc;
     }
 }
 - (void)viewDidLoad {
-    [super viewDidLoad];    
-
+    [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadData) name:@"loadData" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadChartView) name:@"loadChartView" object:nil];
+    
     [self buildMainView];
     
     //今天的时间
@@ -179,6 +181,7 @@ static MainAryViewController *mavc;
     //照片
     _imageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.view addSubview:_imageBtn];
+    [_imageBtn addTarget:self action:@selector(imageBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_imageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(49);
         make.width.mas_equalTo(90);
@@ -236,7 +239,7 @@ static MainAryViewController *mavc;
      //****************我的背景图片********************
 
 -(void)loadData{
-    
+    if(self){
     [_tableView removeFromSuperview];
     [_label removeFromSuperview];
     
@@ -248,16 +251,19 @@ static MainAryViewController *mavc;
     self.dataString = upTimestamp[0];
   
     [self createTableView];
+    }
     
 }
 
 -(void)loadChartView
 {
+    if(self){
     [self.linechart removeFromSuperview];
     DB *db = [DB shareInit];
     [db openOrCreateDB];
     NSArray *weekCountForAll =[db caculateTheCountOfTimestampFromServer:self.searchingMonday];
     [self scrollViewUI:weekCountForAll];
+    }
 }
 //----------------------------列表---------------------------------
 

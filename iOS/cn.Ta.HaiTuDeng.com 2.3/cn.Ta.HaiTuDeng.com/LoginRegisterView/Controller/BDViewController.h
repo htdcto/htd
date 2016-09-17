@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^bindSuccessBlock)();
+
 @interface BDViewController : UIViewController
 
 -(void)addFriendNotice:(NSString *)name alert:(NSString *)alertMessage;
@@ -16,4 +18,5 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *BDTextField;
 @property (nonatomic,strong)UIAlertController *alertController;
+@property (nonatomic,strong) bindSuccessBlock bindSuccess;
 @end

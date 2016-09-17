@@ -21,6 +21,8 @@
               
                   image:(UIImage *)image;
 
+- (void)goRegisterView;
+
 @end
 //创建一个本地数据库的成员变量
 @interface LoginView : UIView

@@ -8,12 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
+@class RegisterView;
+
+@protocol RigsterViewDelegate <NSObject>
+
+- (void)clickedRegisterView:(RegisterView *)registerView name:(NSString *)name pwd:(NSString *)pwd sex:(NSString *)sex image:(UIImage *)image;
+
+@end
+
 @interface RegisterView : UIView
 
 @property (nonatomic, strong) UIButton *registerButton;
 @property (nonatomic, strong) UITextField *nameTextF;
 @property (nonatomic, strong) UITextField *passTextF;
+@property (nonatomic, strong) UIImage *smallImage;
+@property (nonatomic, strong) NSString *sex;
 
+@property (nonatomic, weak) id<RigsterViewDelegate> delegate;
 
 
 // 返回按钮

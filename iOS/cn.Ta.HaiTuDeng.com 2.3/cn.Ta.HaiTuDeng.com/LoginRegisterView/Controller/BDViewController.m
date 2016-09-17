@@ -21,9 +21,21 @@
     _userDefaults = [NSUserDefaults standardUserDefaults];
     self.view.backgroundColor = [UIColor whiteColor];
     [self checkInformationFromIM];
+    [self _setupBarButtonItem];
+    
 
 
     // Do any additional setup after loading the view from its nib.
+}
+
+
+- (void)_setupBarButtonItem
+{
+    UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+    [backButton setImage:[UIImage imageNamed:@"headerimage.png"] forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(backAction) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    [self.navigationItem setLeftBarButtonItem:backItem];
 }
 
 -(void)checkInformationFromIM
@@ -33,11 +45,12 @@
         [self addFriendNotice:extern_name alert:extern_alert];
         extern_name = nil;
         extern_alert = nil;
+
     }
     if(extern_agreename != nil)
     {
         [self didReceiveAgreeFromFriendNotice:extern_agreename];
-        extern_agreename = nil;
+         extern_name = nil;
     }
     if(extern_declinename != nil)
     {
@@ -49,6 +62,9 @@
 
 //登录本地服务器检测待绑定帐号是否注册，如果注册是否已经被绑定，如果没有被绑定则向IM框架发送添加好友通知。
 //注意：此时没有加入客户端本地校验不能跟自己绑定。
+
+
+//需要在这里加上服务器的判断
 - (IBAction)SQBtn:(id)sender {
 
     _Uname = [_userDefaults objectForKey:@"name"];
@@ -97,18 +113,14 @@
 }
 
 
-- (IBAction)QHBtn:(id)sender {
+- (void)backAction {
     EMError *error = [[EMClient sharedClient] logout:YES];
     if (!error) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"name"];
+        [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"password"];
         NSLog(@"退出成功");
     }
-    //移除UserDefaults中存储的用户信息
-    [_userDefaults removeObjectForKey:@"name"];
-    [_userDefaults removeObjectForKey:@"password"];
-    [_userDefaults removeObjectForKey:@"Ttel"];
-    [_userDefaults synchronize];
-    
-    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -120,6 +132,7 @@
 //得到回调函数代理的值（对的名字）生成弹出框
 -(void)addFriendNotice:(NSString *)name alert:(NSString *)alertMessage
 {
+
     NSString *Tname = name;
 
     NSLog(@"%@弹出提示框",name);
@@ -148,57 +161,39 @@
     NSString *alertTitle = @"已同意与您绑定！";
     NSString *alert = [Ttel stringByAppendingString:alertTitle];
     [self showTheAlertView:self andAfterDissmiss:2.0 title:alert message:@""];
-    //绑定的时间
-    NSDate *date = [NSDate date];
-    [_userDefaults setObject:date forKey:@"BDTime"];
     
-    [_userDefaults setObject:Ttel forKey:@"Ttel"];
-    
-    NSString *Utel = [_userDefaults objectForKey:@"name"];
-    NSDictionary *dic = @{@"Utel":Utel,@"Ttel":Ttel};
-    [LDXNetWork GetThePHPWithURL:address(@"/bind.php") par:dic success:^(id responseObject) {
-        if([responseObject[@"success"]isEqualToString:@"1"])
-        {
-            NSString *Expert = responseObject[@"expert"];
-            [_userDefaults setObject:Expert forKey:@"expert"];
-            
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_LOGINCHANGE object:@YES];
-        
-        }
-        else
-        {
-            [self showTheAlertView:self andAfterDissmiss:1.0 title:@"绑定失败" message:@""];
-
-        
-        }
-    }error:^(NSError *error) {
-        [self showTheAlertView:self andAfterDissmiss:1.0 title:@"网络错误" message:@""];
-    }];
+    EMError *error = [[EMClient sharedClient] logout:YES];
+    if (!error) {
+        _bindSuccess();
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
 }
+
 -(void)agreeFriendInvitationFrom:(NSString *)name
 {
     NSString *Ttel = name;
     EMError *error = [[EMClient sharedClient].contactManager acceptInvitationForUsername:name];
     if (!error) {
     [self showTheAlertView:self andAfterDissmiss:1.0 title:@"同意成功" message:@""];
-        [_userDefaults setObject:Ttel forKey:@"Ttel"];
-        //绑定的时间
-        NSDate *date = [NSDate date];
-        [_userDefaults setObject:date forKey:@"BDTime"];
-
         NSString *Utel = [_userDefaults objectForKey:@"name"];
         NSDictionary *dic = @{@"Utel":Utel,@"Ttel":Ttel};
         [LDXNetWork GetThePHPWithURL:address(@"/bind.php") par:dic success:^(id responseObject) {
             if([responseObject[@"success"]isEqualToString:@"1"])
             {
-               [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_LOGINCHANGE object:@YES];
+                
+                EMError *error = [[EMClient sharedClient] logout:YES];
+                if (!error) {
+                    _bindSuccess();
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                }
+
+//               [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_LOGINCHANGE object:@YES];
                 
             }
             else
             {
                 [self showTheAlertView:self andAfterDissmiss:1.0 title:@"绑定失败" message:@""];
-                
-                
+        
             }
         }error:^(NSError *error) {
             [self showTheAlertView:self andAfterDissmiss:1.0 title:@"网络错误" message:@""];
@@ -206,12 +201,12 @@
         
     }
     else{
-    [self showTheAlertView:self andAfterDissmiss:1.0 title:@"操作失败，请稍候重试" message:@""];
+        [self showTheAlertView:self andAfterDissmiss:1.0 title:@"操作失败，请稍候重试" message:@""];
     }
 }
 
--(void)didReceiveDeclineFromFriendNotice:(NSString *)name
-{
+-(void)didReceiveDeclineFromFriendNotice:(NSString *)name{
+
     NSString *alerTitle = @"已经拒绝您的绑定申请！";
     NSString *alert = [name stringByAppendingString:alerTitle];
     [self showTheAlertView:self andAfterDissmiss:2.0 title:alert message:@""];

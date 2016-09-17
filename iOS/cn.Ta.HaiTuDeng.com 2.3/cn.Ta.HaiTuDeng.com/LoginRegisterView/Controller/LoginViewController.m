@@ -13,9 +13,11 @@
 #import "MainViewController.h"
 #import "Constant.h"
 #import "Helper.h"
+#import "RegisterView.h"
 
-@interface LoginViewController ()<LoginRegisterDelegate>
+@interface LoginViewController ()<LoginRegisterDelegate,RigsterViewDelegate>
 @property (nonatomic,strong)LoginView * longinR;
+@property (nonatomic,strong)RegisterView *regist;
 @property BOOL alreadyBind;
 @property (strong,nonatomic) BDViewController *bdViewController;
 @end
@@ -46,18 +48,21 @@
     NSThread *thread = [NSThread currentThread];
     BOOL s = [thread isMainThread];
     NSLog(@"----==================-----------------%d",s);
-
+    __weak typeof(self) weakSelf = self;
     [LDXNetWork GetThePHPWithURL:address(@"/login.php") par:dic success:^(id responseObject) {
 
-        
+        NSLog(@"%@",[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]);
         if ([responseObject[@"success"]isEqualToString:@"1"]) {
                 //没有绑定，服务器没有返回Tt
+            
+            [[NSUserDefaults standardUserDefaults]setObject:name forKey:@"name"];
+            [[NSUserDefaults standardUserDefaults]setObject:pass forKey:@"password"];
             if([responseObject[@"Ttel"] isEqualToString:@"-1"]){
-               
-                NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                [userDefaults setObject:name forKey:@"name"];
-                [userDefaults setObject:pass forKey:@"password"];
+                
                 _bdViewController =[[BDViewController alloc]init];
+                _bdViewController.bindSuccess = ^{
+                    [weakSelf Login:name pass:pass];
+                };
                 UINavigationController *nav = (UINavigationController *)[[[UIApplication sharedApplication] keyWindow] rootViewController];
                 [nav pushViewController:_bdViewController animated:YES];
                 _alreadyBind = NO;
@@ -76,8 +81,6 @@
                     
 
                     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                    [userDefaults setObject:name forKey:@"name"];
-                    [userDefaults setObject:pass forKey:@"password"];
                     [userDefaults setObject:Ttel forKey:@"Ttel"];
                     
                     NSTimeZone *timeZone=[NSTimeZone timeZoneWithName:@"UTC"];
@@ -97,14 +100,14 @@
                     
                     //操作本地数据库
                     DB *db = [DB shareInit];
+                    [db createDBPath];
                     [db openOrCreateDB];
                     [db updateDBAfterLoginSuccess:name response:^{
-                        JustLogin = NO;
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"loadData" object:nil];
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"loadChartView" object:nil];
                     }];
                     success(YES);
-
                 }
-
             }
             else{
                 success(NO);
@@ -192,17 +195,25 @@
 }
 
 
-
--(void)getRegisterName:(NSString *)name pass:(NSString *)pass image:(UIImage *)image
+-(void)clickedRegisterView:(RegisterView *)registerView name:(NSString *)name pwd:(NSString *)pwd sex:(NSString *)sex image:(UIImage *)image
 {
-    
-    NSDictionary *dic = @{@"Utel":name,@"Upass":pass};
+    NSDictionary *dic = @{@"Utel":name,@"Upass":pwd,@"Sex":sex};
     [LDXNetWork PostThePHPWithURL:address(@"/register.php") par:dic image:image uploadName:@"headerimageFile" success:^(id response) {
+        
+        NSString *headerPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"headerImage"];
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:headerPath]) {
+            NSError *error;
+            [[NSFileManager defaultManager] removeItemAtPath:headerPath error:&error];
+            if (error) {
+                NSLog(@"%s-----%@",__func__,error);
+            }
+        }
         NSString *success = response[@"success"];
         
         if ([success isEqualToString:@"1"]) {
             [self showTheAlertView:self andAfterDissmiss:1.5 title:@"注册成功" message:@""];
-            [self.longinR goToLoginView];
+            [self.regist removeFromSuperview];
         }
         else if([success isEqualToString:@"-1"]){
             [self showTheAlertView:self andAfterDissmiss:1.5 title:@"账号已经被注册" message:@""];
@@ -231,5 +242,19 @@
     // Pass the selected object to the new view controller.
 }
 */
+#pragma mark - LoginViewDelegate
+
+- (void)goRegisterView{
+
+    self.regist = [[RegisterView alloc] initWithFrame:CGRectMake(0, screenNowH, self.view.frame.size.width, self.view.frame.size.height)];
+    self.regist.delegate = self;
+    // 注册页面注册按钮点击方法
+    
+    // 注册页面其实是盖在登录页面上的
+    [self.longinR addSubview:_regist];
+    [UIView animateWithDuration:1.0 animations:^{
+        _regist.frame = self.view.frame;
+    }];
+}
 
 @end
