@@ -8,6 +8,7 @@
 
 #import "RankViewController.h"
 #import "RankViewCell.h"
+#import "UIImageView+AFNetworking.h"
 
 #define WIDTH [UIScreen mainScreen].bounds.size.width
 #define HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -49,9 +50,9 @@
     cell.fristName.text = _Mname;
     cell.secondeName.text = _Wname;
     cell.rank.text = _Coefficient;
-    cell.fristImage.image = [UIImage imageNamed:@"Man"];
-    cell.secondImage.image = [UIImage imageNamed:@"WoMan"];
-    
+
+    [cell.fristImage setImageWithURL:[NSURL URLWithString:[_dic objectForKey:@"Mheaderimageurl"]] placeholderImage:[UIImage imageNamed:@"Man"]];
+    [cell.secondImage setImageWithURL:[NSURL URLWithString:[_dic objectForKey:@"Wheaderimageurl"]] placeholderImage:[UIImage imageNamed:@"WoMan"]];
     cell.accessoryType = UITableViewCellSeparatorStyleSingleLine;
     return cell;
 }

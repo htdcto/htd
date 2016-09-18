@@ -13,8 +13,6 @@
 
 #define WIDTH [UIScreen mainScreen].bounds.size.width
 #define HEIGHT [UIScreen mainScreen].bounds.size.height
-#define XINAGQIng @"http://120.26.62.17/ta/ta/showinformation.php?Id=%@&Utel=%@"
-
 
 @interface DetaViewController ()
 @property (nonatomic,strong)UIWebView *webView;
@@ -63,7 +61,7 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *Utel = [userDefaults objectForKey:@"name"];
 
-    NSString *url = [NSString stringWithFormat:XINAGQIng,self.contentid,Utel];
+    NSString *url = [NSString stringWithFormat:address(@"/showinformation.php?Id=%@&Utel=%@"),self.contentid,Utel];
     
     NSURL *Url = [NSURL URLWithString:url];
     NSURLRequest *request = [NSURLRequest requestWithURL:Url];

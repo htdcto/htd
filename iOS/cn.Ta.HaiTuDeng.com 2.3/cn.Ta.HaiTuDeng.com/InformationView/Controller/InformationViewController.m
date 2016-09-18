@@ -13,8 +13,6 @@
 #import "DetaViewController.h"//详情
 
 
-#define ZIXUN @"http://120.26.62.17/ta/ta/title.php"
-
 
 #define WIDTH [UIScreen mainScreen].bounds.size.width
 #define HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -22,7 +20,6 @@
 @interface InformationViewController ()
 @property (nonatomic,strong)NSString *filename;
 @property (nonatomic,strong)NSString *_Uname;
-@property (nonatomic,strong)NSString *Url;
 
 @property BOOL localLoad;
 
@@ -52,7 +49,6 @@
 -(void)initData
 {
     _localLoad = NO;
-    _Url = ZIXUN;
     self.dataArray = [NSMutableArray array];
     self.pagenum = 1;
 }
@@ -155,7 +151,7 @@
     __Uname = [[NSUserDefaults standardUserDefaults]objectForKey:@"name"];
     NSNumber *page = [NSNumber numberWithInt:self.pagenum];
     NSDictionary *dic = @{@"pagenum":page,@"Utel":__Uname};
-    [LDXNetWork GetThePHPWithURL:ZIXUN par:dic success:^(id responseObject) {
+    [LDXNetWork GetThePHPWithURL:address(@"/title.php") par:dic success:^(id responseObject) {
         NSArray *resultAry = responseObject[@"date"];
         if ([resultAry isKindOfClass:[NSArray class]] && resultAry.count > 0) {
             if (self.pagenum == 1) {

@@ -32,9 +32,10 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor colorWithRed:0.88 green:0.88 blue:0.88 alpha:1.0];
     self.rvc = [[RankViewController alloc]init];
     self.rvc.ovc = self;
-    self.rvc.view.frame  = CGRectMake(50, 100,[UIScreen mainScreen].bounds.size.width, 200);
+    self.rvc.view.frame  = CGRectMake(0, 100,[UIScreen mainScreen].bounds.size.width, 200);
     self.cv = [[ChartView alloc]init];
     [self.view addSubview:self.rvc.view];
     

@@ -15,4 +15,5 @@
 -(void)setExpertUnread;
 
 - (void)playSoundAndVibration;
+- (void)showNotificationWithMessage:(EMMessage *)message;
 @end

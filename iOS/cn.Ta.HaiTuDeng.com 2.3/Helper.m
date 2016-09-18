@@ -95,6 +95,7 @@ static Helper *helper = nil;
         
     {
 #if !TARGET_IPHONE_SIMULATOR
+        [self showNotification:message];
 #endif
         
         EMCmdMessageBody *body = (EMCmdMessageBody *)message.body;
@@ -146,13 +147,18 @@ static Helper *helper = nil;
 
 - (void)didReceiveMessages:(NSArray *)aMessages
 {
+    for (EMMessage *message in aMessages)
+    {
+#if !TARGET_IPHONE_SIMULATOR
+    [self showNotification:message];
+#endif
+    }
     if (_meVC) {
         [_mainVC setExpertUnread];
     }
-    
 }
-/*
--(void)showNotification
+
+-(void)showNotification:(EMMessage *)message
 {
     UIApplicationState state = [[UIApplication sharedApplication] applicationState];
     switch (state) {
@@ -170,7 +176,7 @@ static Helper *helper = nil;
     }
 
 }
-*/
+
 
 #pragma mark -
 //-------------------------------------------------

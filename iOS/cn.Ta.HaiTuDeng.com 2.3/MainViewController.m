@@ -12,6 +12,8 @@
 
 //两次提示的默认间隔
 static const CGFloat kDefaultPlaySoundInterval = 3.0;
+static NSString *kMessageType = @"MessageType";
+static NSString *kConversationChatter = @"ConversationChatter";
 
 @interface MainViewController ()
 {
@@ -222,7 +224,8 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
     //发送本地推送
     UILocalNotification *notification = [[UILocalNotification alloc]init];
     notification.fireDate = [NSDate date];//触发通知的时间
-    if(options.displayStyle == EMPushDisplayStyleMessageSummary){
+//用户设置时做
+//    if(options.displayStyle == EMPushDisplayStyleMessageSummary){
         EMMessageBody *messageBody = message.body;
         NSString *messageStr = nil;
         switch (messageBody.type) {
@@ -233,29 +236,71 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
                 break;
             case EMMessageBodyTypeImage:
             {
-                messageStr = NSLocalizedString(@"message.image", @"Image");
+                messageStr = NSLocalizedString(@"达人给你发来一张图片", @"Image from expert");
             }
                 break;
             case EMMessageBodyTypeLocation:
             {
-                messageStr = NSLocalizedString(@"message.location", @"Location");
+                messageStr = NSLocalizedString(@"达人给你发来了他的定位", @"Location from expert");
             }
                 break;
             case EMMessageBodyTypeVoice:
             {
-                messageStr = NSLocalizedString(@"message.voice", @"Voice");
+                messageStr = NSLocalizedString(@"达人给你发来一条语音", @"Voice from expert");
             }
                 break;
             case EMMessageBodyTypeVideo:{
-                messageStr = NSLocalizedString(@"message.video", @"Video");
+                messageStr = NSLocalizedString(@"达人给你发来一条视频", @"Video from expert");
+            }
+                
+            case EMMessageBodyTypeCmd:{
+                EMCmdMessageBody *cmdBody = (EMCmdMessageBody *)messageBody;
+                if ([cmdBody.action isEqualToString:UpdateLocalDBAndServer]) {
+                    messageStr = NSLocalizedString(@"Dear，我想你了", @"you have got a heart!");
+                }
+                else if ([cmdBody.action isEqualToString:UpdateBackImage]) {
+                    messageStr = NSLocalizedString(@"Dear，我更换了你的背景图片", @"you have got a backimage!");
+                }
+                else if ([cmdBody.action isEqualToString:UpdateStatusImage]) {
+                    messageStr = NSLocalizedString(@"Dear，向你汇报我的新状态", @"you have got a statusimage!");
+                }
+                
             }
                 break;
             default:
                 break;
         }
+        
+        NSString *title = message.from;
+        notification.alertBody = [NSString stringWithFormat:@"%@:%@", title, messageStr];
+//    }
+//    else{
+//        notification.alertBody = NSLocalizedString(@"receiveMessage", @"you have a new message");
+//    }
+    
+#warning 去掉注释会显示[本地]开头, 方便在开发中区分是否为本地推送
+    //notification.alertBody = [[NSString alloc] initWithFormat:@"[本地]%@", notification.alertBody];
+    
+    notification.alertAction = NSLocalizedString(@"open", @"Open");
+    notification.timeZone = [NSTimeZone defaultTimeZone];
+    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.lastPlaySoundDate];
+    if (timeInterval < kDefaultPlaySoundInterval) {
+        NSLog(@"skip ringing & vibration %@, %@", [NSDate date], self.lastPlaySoundDate);
+    } else {
+        notification.soundName = UILocalNotificationDefaultSoundName;
+        self.lastPlaySoundDate = [NSDate date];
     }
+    
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    [userInfo setObject:[NSNumber numberWithInt:message.chatType] forKey:kMessageType];
+    [userInfo setObject:message.conversationId forKey:kConversationChatter];
+    notification.userInfo = userInfo;
+    
+    //发送通知
+    [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+    //    UIApplication *application = [UIApplication sharedApplication];
+    //    application.applicationIconBadgeNumber += 1;
 }
-
 /*
  #pragma mark - Navigation
  

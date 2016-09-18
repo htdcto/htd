@@ -22,7 +22,7 @@
 #define PrefixHeader_Ta_PCH
 #define totalPages 1
 
-#define Ip @"http://120.26.62.17/ta/ta"
+#define Ip @"http://htd.pod.gift/ta/ta"
 #define address(s) [Ip stringByAppendingString:(s)]
 
 //登录

@@ -11,6 +11,7 @@
 #import "Charts.h"
 #import "cn.Ta.HaiTuDeng.com-Bridging-Header.h"
 #import "Message.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface StatusViewController ()<UIImagePickerControllerDelegate,ShareActionViewDelegate,UINavigationControllerDelegate>
 {
@@ -33,7 +34,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _upvc = [[UPImageViewController alloc]init];
-    _upvc.svc = self;
+    
+    //m
+    __weak typeof(self) weakSelf = self;
+    _upvc.completion = ^{
+        [weakSelf backImageDown:^{
+            
+        }];
+    };
+    //
+//    _upvc.svc = self;
     self.view.backgroundColor = [UIColor whiteColor];
     _BJImage.backgroundColor = [UIColor colorWithRed:(255/255.0f) green:(235/255.0f) blue:(227/255.0f) alpha:0.5];
     _BJImage.userInteractionEnabled = YES;
@@ -110,8 +120,9 @@
     NSString *Uname = [userDefaults objectForKey:@"name"];
     NSString *Tname = [userDefaults objectForKey:@"Ttel"];
     NSDictionary *dic = @{@"Utel":Uname,@"Ttel":Tname};
-
+    
         [LDXNetWork GetThePHPWithURL:address(@"/ingimagedown.php") par:dic success:^(id responseObject) {
+            
             if ([responseObject[@"success"]isEqualToString:@"1"]) {
                 NSString *tel = responseObject[@"Utel"];
                 NSString *Time = responseObject[@"Time"];
@@ -124,10 +135,14 @@
                 //仅有当两个用户第一次使用，都没有发状态的情况，服务器返回数据除了双方点击次数
                 _Diction = @{@"tel":tel,@"Time":Time,@"URL":Url,@"Mood":Mood};
                 [self setPieChartView];
-                NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:Url]];
-                _image = [UIImage imageWithData:data];
-                [_BJImage setImage:_image];
-                    needBack();
+//                NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:Url]];
+//                _image = [UIImage imageWithData:data];
+//                [_BJImage setImage:_image];
+                    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:Url]];
+                    [_BJImage setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *  request, NSHTTPURLResponse *  response, UIImage * image) {
+                        needBack();
+                    } failure:^(NSURLRequest * request, NSHTTPURLResponse * response, NSError * error) {
+                    }];
                 }
             }
         } error:^(NSError *error) {
@@ -151,7 +166,8 @@
                      [mes createCmdMessage:UpdateStatusImage];
                      _image = nil;
                  }
-             }error:^(NSError *error){}];
+             }error:^(NSError *error){
+             }];
     }
 }
 -(void)onClickImage

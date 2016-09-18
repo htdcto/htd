@@ -10,7 +10,9 @@
 #import "Message.h"
 #import "Constant.h"
 #import "StatusViewController.h"
-
+//m
+typedef void (^Completion)();
+//
 @interface UPImageViewController : UIViewController
 @property (nonatomic,strong)UIAlertController *alertController;
 
@@ -20,6 +22,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *StatusBtn;
 //表情图片
 @property (strong, nonatomic) IBOutlet UIImageView *BQimage;
-
-@property (nonatomic,weak) StatusViewController *svc;
+//m
+@property (nonatomic, strong) Completion completion;
+//
+//@property (nonatomic,weak) StatusViewController *svc;
 @end

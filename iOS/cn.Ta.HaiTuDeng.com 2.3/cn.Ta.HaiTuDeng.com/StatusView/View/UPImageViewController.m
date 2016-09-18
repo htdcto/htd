@@ -116,39 +116,44 @@
             [self showTheAlertView:self andAfterDissmiss:1.5 title:@"表情不能为空" message:@""];
             });
         }else{
-                NSDictionary *dic = @{@"Utel":name,@"Mood":_Strbtntag};
-                [LDXNetWork PostThePHPWithURL:address(@"/ingimageup.php") par:dic image:_image uploadName:@"uploadimageFile" success:^(id response) {
-                    NSString *success = response[@"success"];
-                    if ([success isEqualToString:@"1"]) {
-                        Message *mes = [[Message alloc]init];
-                        [mes createCmdMessage:UpdateStatusImage];
-                        [_svc backImageDown:^{
-                        }];
-                        
-                   dispatch_async(dispatch_get_main_queue(), ^{
-                       _alertController = [UIAlertController alertControllerWithTitle:@"上传成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                           
-                       //添加确定按钮
-                       UIAlertAction *yesAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                           [self.navigationController popToRootViewControllerAnimated:YES];
-                           
-                       }];
-                       [_alertController addAction:yesAction];
+            NSDictionary *dic = @{@"Utel":name,@"Mood":_Strbtntag};
+            NSTimeInterval time = CACurrentMediaTime();
+            [LDXNetWork PostThePHPWithURL:address(@"/ingimageup.php") par:dic image:_image uploadName:@"uploadimageFile" success:^(id response) {
+                NSLog(@"%f",CACurrentMediaTime() - time);
+                NSString *success = response[@"success"];
+                if ([success isEqualToString:@"1"]) {
+                    Message *mes = [[Message alloc]init];
+                    [mes createCmdMessage:UpdateStatusImage];
+                    //m
+//                        [_svc backImageDown:^{
+//                        }];
+                    
+                    _completion();
+                    //
+               dispatch_async(dispatch_get_main_queue(), ^{
+                   _alertController = [UIAlertController alertControllerWithTitle:@"上传成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
                        
-                       [self presentViewController:_alertController animated:YES completion:nil];
-                   });
-                        
-                    }
+                   //添加确定按钮
+                   UIAlertAction *yesAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                       [self.navigationController popToRootViewControllerAnimated:YES];
+                       
+                   }];
+                   [_alertController addAction:yesAction];
+                   
+                   [self presentViewController:_alertController animated:YES completion:nil];
+               });
                     
-                    else if([success isEqualToString:@"-1"]){
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self showTheAlertView:self andAfterDissmiss:1.5 title:@"上传失败" message:@""];
-                        });
-                    }
-                    
-                } error:^(NSError *error) {
-                    NSLog(@"错误的原因:%@",error);
-                }];
+                }
+                
+                else if([success isEqualToString:@"-1"]){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self showTheAlertView:self andAfterDissmiss:1.5 title:@"上传失败" message:@""];
+                    });
+                }
+                
+            } error:^(NSError *error) {
+                NSLog(@"错误的原因:%@",error);
+            }];
         
         }
     }
