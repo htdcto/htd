@@ -17,13 +17,13 @@ import CoreGraphics
 #endif
 
 @objc(ChartMarkerView)
-public class MarkerView: NSUIView, IMarker
+open class MarkerView: NSUIView, IMarker
 {
-    public var offset: CGPoint = CGPoint()
+    open var offset: CGPoint = CGPoint()
     
-    public weak var chartView: ChartViewBase?
+    open weak var chartView: ChartViewBase?
     
-    public func offsetForDrawingAtPos(point: CGPoint) -> CGPoint
+    open func offsetForDrawingAtPos(_ point: CGPoint) -> CGPoint
     {
         var offset = self.offset
         
@@ -53,33 +53,32 @@ public class MarkerView: NSUIView, IMarker
         return offset
     }
     
-    public func refreshContent(entry entry: ChartDataEntry, highlight: Highlight)
+    open func refreshContent(entry: ChartDataEntry, highlight: Highlight)
     {
         // Do nothing here...
     }
     
-    public func draw(context context: CGContext, point: CGPoint)
+    open func draw(context: CGContext, point: CGPoint)
     {
         let offset = self.offsetForDrawingAtPos(point)
         
-        CGContextSaveGState(context)
-        CGContextTranslateCTM(context,
-                              point.x + offset.x,
-                              point.y + offset.y)
+        context.saveGState()
+        context.translateBy(x: point.x + offset.x,
+                              y: point.y + offset.y)
         NSUIGraphicsPushContext(context)
-        self.nsuiLayer?.renderInContext(context)
+        self.nsuiLayer?.render(in: context)
         NSUIGraphicsPopContext()
-        CGContextRestoreGState(context)
+        context.restoreGState()
     }
     
     @objc
-    public class func viewFromXib() -> MarkerView?
+    open class func viewFromXib() -> MarkerView?
     {
         #if !os(OSX)
-            return NSBundle.mainBundle().loadNibNamed(
-                String(self),
+            return Bundle.main.loadNibNamed(
+                String(describing: self),
                 owner: nil,
-                options: nil)[0] as? MarkerView
+                options: nil)?[0] as? MarkerView
         #else
             
             let loadedObjects = AutoreleasingUnsafeMutablePointer<NSArray?>(nilLiteral: ())

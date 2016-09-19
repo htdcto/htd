@@ -139,7 +139,8 @@
 //                _image = [UIImage imageWithData:data];
 //                [_BJImage setImage:_image];
                     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:Url]];
-                    [_BJImage setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *  request, NSHTTPURLResponse *  response, UIImage * image) {
+                    [_BJImage setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *  response, UIImage * image) {
+                        _image = image;
                         needBack();
                     } failure:^(NSURLRequest * request, NSHTTPURLResponse * response, NSError * error) {
                     }];
@@ -164,7 +165,7 @@
                  if ([responseObject[@"success"]isEqualToString:@"1"]){
                      Message *mes= [[Message alloc]init];
                      [mes createCmdMessage:UpdateStatusImage];
-                     _image = nil;
+                     //_image = nil;
                  }
              }error:^(NSError *error){
              }];

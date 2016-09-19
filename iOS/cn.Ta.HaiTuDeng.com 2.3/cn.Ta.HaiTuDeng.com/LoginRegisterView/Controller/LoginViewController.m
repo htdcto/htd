@@ -14,6 +14,7 @@
 #import "Constant.h"
 #import "Helper.h"
 #import "RegisterView.h"
+#import "MBProgressHUD.h"
 
 @interface LoginViewController ()<LoginRegisterDelegate,RigsterViewDelegate>
 @property (nonatomic,strong)LoginView * longinR;
@@ -115,14 +116,7 @@
             }
         } error:^(NSError *error) {
             success(NO);
-#if DEBUG
-        [self showTheAlertView:self andAfterDissmiss:2.0 title:@"无服务器连接" message:@""];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_LOGINCHANGE object:@YES];
-
-#else
         [self showTheAlertView:self andAfterDissmiss:2.0 title:@"服务器故障，请稍候再试" message:@""];
-#endif
-            
         }];
 }
 
@@ -168,31 +162,33 @@
 //先检测IM框架是否登录，如果登录成功返回1作服务器端登录，否则返回0报错。----------------------------------xzl
 -(void)Login:(NSString *)name pass:(NSString *)pass
 {
+        if ([name isEqualToString:@""] || [pass isEqualToString:@""]) {
+            
+            [self showTheAlertView:self andAfterDissmiss:1.0 title:@"请输入帐号跟密码" message:@""];
+            return;
+        }
 
-    if ([name isEqualToString:@""] || [pass isEqualToString:@""]) {
-        
-        [self showTheAlertView:self andAfterDissmiss:1.0 title:@"请输入帐号跟密码" message:@""];
-        return;
-    }
-    NSInteger loginIM;
-    loginIM = [self getLoginIM:name pass:pass];
-    switch (loginIM) {
-        case(1):
-        {
-            [self getLoginServer:name pass:pass success:^(BOOL success) {
-                if (success) {
+    [self showHudInView:self.view hint:NSLocalizedString(@"正在登录", @"Is Login...")];
+
+    //异步登录帐号
+    __weak typeof (self) weakself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSInteger loginIM;
+        loginIM = [weakself getLoginIM:name pass:pass];
+        switch (loginIM) {
+            case(1):
+            {
+                [weakself getLoginServer:name pass:pass success:^(BOOL success) {
+                    if (success) {
                         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_LOGINCHANGE object:@YES];
-    
                     }
-            }];
+                }];
+            }
+                break;
         }
-            break;
-        case (-1):
-        {
-             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_LOGINCHANGE object:@YES];
-        }
-    }
-}
+        [weakself hideHud];
+    });
+ }
 
 
 -(void)clickedRegisterView:(RegisterView *)registerView name:(NSString *)name pwd:(NSString *)pwd sex:(NSString *)sex image:(UIImage *)image

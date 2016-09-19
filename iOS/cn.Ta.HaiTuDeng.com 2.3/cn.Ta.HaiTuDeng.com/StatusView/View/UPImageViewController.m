@@ -98,23 +98,16 @@
 //上传按钮
 - (IBAction)SCBtn:(id)sender {
     
-    //异步上传状态图片
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0);
-    dispatch_async(queue, ^{
+
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *name = [userDefaults objectForKey:@"name"];
-    NSDate *date = [NSDate date];
 
     if (_image == nil) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
+
             [self showTheAlertView:self andAfterDissmiss:1.5 title:@"状态图片不能为空" message:@""];
-        });
     }else{
         if (_Strbtntag == nil) {
-            dispatch_async (dispatch_get_main_queue(),^{
             [self showTheAlertView:self andAfterDissmiss:1.5 title:@"表情不能为空" message:@""];
-            });
         }else{
             NSDictionary *dic = @{@"Utel":name,@"Mood":_Strbtntag};
             NSTimeInterval time = CACurrentMediaTime();
@@ -130,7 +123,6 @@
                     
                     _completion();
                     //
-               dispatch_async(dispatch_get_main_queue(), ^{
                    _alertController = [UIAlertController alertControllerWithTitle:@"上传成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
                        
                    //添加确定按钮
@@ -141,14 +133,11 @@
                    [_alertController addAction:yesAction];
                    
                    [self presentViewController:_alertController animated:YES completion:nil];
-               });
-                    
                 }
                 
+                
                 else if([success isEqualToString:@"-1"]){
-                    dispatch_async(dispatch_get_main_queue(), ^{
                         [self showTheAlertView:self andAfterDissmiss:1.5 title:@"上传失败" message:@""];
-                    });
                 }
                 
             } error:^(NSError *error) {
@@ -157,8 +146,6 @@
         
         }
     }
-            });
-    
 }
 
 - (void)didReceiveMemoryWarning {

@@ -22,18 +22,7 @@
     
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
-    
-    NSString *aspnCerName = @"nil";
-    //开始向环信注册企业和应用id
-    EMOptions *options = [EMOptions optionsWithAppkey:TaAppleKey];
-    options.apnsCertName =aspnCerName;
-    [[EMClient sharedClient] initializeSDKWithOptions:options];
-    
-    // 用到友盟统计crash以及用户交互数据
-    [self setupUMeng];
-    
-    [self taApplication:application didFinishLaunchingWithOptions:launchOptions appkey:TaAppleKey apnsCertName:aspnCerName otherConfig:nil];
-    
+    [self.window makeKeyAndVisible];
     //iOS8 注册APNS
     if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
         [application registerForRemoteNotifications];
@@ -50,8 +39,16 @@
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
     }
     
-    [self.window makeKeyAndVisible];
-
+    NSString *aspnCerName = @"nil";
+    //开始向环信注册企业和应用id
+    EMOptions *options = [EMOptions optionsWithAppkey:TaAppleKey];
+    options.apnsCertName =aspnCerName;
+    [[EMClient sharedClient] initializeSDKWithOptions:options];
+    
+    // 用到友盟统计crash以及用户交互数据
+    [self setupUMeng];
+    
+    [self taApplication:application didFinishLaunchingWithOptions:launchOptions appkey:TaAppleKey apnsCertName:aspnCerName otherConfig:nil];
     return YES;
 }
 

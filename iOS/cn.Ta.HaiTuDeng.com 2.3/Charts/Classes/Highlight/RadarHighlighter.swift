@@ -13,9 +13,9 @@ import Foundation
 import CoreGraphics
 
 @objc(RadarChartHighlighter)
-public class RadarHighlighter: PieRadarHighlighter
+open class RadarHighlighter: PieRadarHighlighter
 {
-    public override func closestHighlight(index index: Int, x: CGFloat, y: CGFloat) -> Highlight?
+    open override func closestHighlight(index: Int, x: CGFloat, y: CGFloat) -> Highlight?
     {
         guard let chart = self.chart as? RadarChartView
             else { return nil }
@@ -44,7 +44,7 @@ public class RadarHighlighter: PieRadarHighlighter
     /// The Highlight objects give information about the value at the selected index and DataSet it belongs to.
     ///
     /// - parameter index:
-    internal func getHighlights(index index: Int) -> [Highlight]
+    internal func getHighlights(index: Int) -> [Highlight]
     {
         var vals = [Highlight]()
         

@@ -13,11 +13,11 @@ import Foundation
 import CoreGraphics
 
 
-public class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartDataSet
+open class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartDataSet
 {
-    private func initialize()
+    fileprivate func initialize()
     {
-        self.highlightColor = NSUIColor.blackColor()
+        self.highlightColor = NSUIColor.black
         
         self.calcStackSize(values as! [BarChartDataEntry])
         self.calcEntryCountIncludingStacks(values as! [BarChartDataEntry])
@@ -39,14 +39,14 @@ public class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartD
     
     /// the maximum number of bars that are stacked upon each other, this value
     /// is calculated from the Entries that are added to the DataSet
-    private var _stackSize = 1
+    fileprivate var _stackSize = 1
     
     /// the overall entry count, including counting each stack-value individually
-    private var _entryCountStacks = 0
+    fileprivate var _entryCountStacks = 0
     
     /// Calculates the total number of entries this DataSet represents, including
     /// stacks. All values belonging to a stack are calculated separately.
-    private func calcEntryCountIncludingStacks(yVals: [BarChartDataEntry]!)
+    fileprivate func calcEntryCountIncludingStacks(_ yVals: [BarChartDataEntry]!)
     {
         _entryCountStacks = 0
         
@@ -66,7 +66,7 @@ public class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartD
     }
     
     /// calculates the maximum stacksize that occurs in the Entries array of this DataSet
-    private func calcStackSize(yVals: [BarChartDataEntry]!)
+    fileprivate func calcStackSize(_ yVals: [BarChartDataEntry]!)
     {
         for i in 0 ..< yVals.count
         {
@@ -80,7 +80,7 @@ public class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartD
         }
     }
     
-    public override func calcMinMax(entry e: ChartDataEntry)
+    open override func calcMinMax(entry e: ChartDataEntry)
     {
         guard let e = e as? BarChartDataEntry
             else { return }
@@ -117,43 +117,43 @@ public class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartD
     }
     
     /// - returns: The maximum number of bars that can be stacked upon another in this DataSet.
-    public var stackSize: Int
+    open var stackSize: Int
     {
         return _stackSize
     }
     
     /// - returns: `true` if this DataSet is stacked (stacksize > 1) or not.
-    public var isStacked: Bool
+    open var isStacked: Bool
     {
         return _stackSize > 1 ? true : false
     }
     
     /// - returns: The overall entry count, including counting each stack-value individually
-    public var entryCountStacks: Int
+    open var entryCountStacks: Int
     {
         return _entryCountStacks
     }
     
     /// array of labels used to describe the different values of the stacked bars
-    public var stackLabels: [String] = ["Stack"]
+    open var stackLabels: [String] = ["Stack"]
     
     // MARK: - Styling functions and accessors
     
     /// the color used for drawing the bar-shadows. The bar shadows is a surface behind the bar that indicates the maximum value
-    public var barShadowColor = NSUIColor(red: 215.0/255.0, green: 215.0/255.0, blue: 215.0/255.0, alpha: 1.0)
+    open var barShadowColor = NSUIColor(red: 215.0/255.0, green: 215.0/255.0, blue: 215.0/255.0, alpha: 1.0)
 
     /// the width used for drawing borders around the bars. If borderWidth == 0, no border will be drawn.
-    public var barBorderWidth : CGFloat = 0.0
+    open var barBorderWidth : CGFloat = 0.0
 
     /// the color drawing borders around the bars.
-    public var barBorderColor = NSUIColor.blackColor()
+    open var barBorderColor = NSUIColor.black
 
     /// the alpha value (transparency) that is used for drawing the highlight indicator bar. min = 0.0 (fully transparent), max = 1.0 (fully opaque)
-    public var highlightAlpha = CGFloat(120.0 / 255.0)
+    open var highlightAlpha = CGFloat(120.0 / 255.0)
     
     // MARK: - NSCopying
     
-    public override func copyWithZone(zone: NSZone) -> AnyObject
+    open override func copyWithZone(_ zone: NSZone?) -> AnyObject
     {
         let copy = super.copyWithZone(zone) as! BarChartDataSet
         copy._stackSize = _stackSize
