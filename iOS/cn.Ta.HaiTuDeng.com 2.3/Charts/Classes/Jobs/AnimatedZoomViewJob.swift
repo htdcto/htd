@@ -12,7 +12,7 @@
 import Foundation
 import CoreGraphics
 
-open class AnimatedZoomViewJob: AnimatedViewPortJob
+public class AnimatedZoomViewJob: AnimatedViewPortJob
 {
     internal var yAxis: YAxis?
     internal var xAxisRange: Double = 0.0
@@ -37,7 +37,7 @@ open class AnimatedZoomViewJob: AnimatedViewPortJob
         zoomCenterY: CGFloat,
         zoomOriginX: CGFloat,
         zoomOriginY: CGFloat,
-        duration: TimeInterval,
+        duration: NSTimeInterval,
         easing: ChartEasingFunctionBlock?)
     {
         super.init(viewPortHandler: viewPortHandler,
@@ -64,8 +64,8 @@ open class AnimatedZoomViewJob: AnimatedViewPortJob
     {
         guard let
             viewPortHandler = viewPortHandler,
-            let transformer = transformer,
-            let view = view
+            transformer = transformer,
+            view = view
             else { return }
         
         let scaleX = xOrigin + (self.scaleX - xOrigin) * phase

@@ -12,7 +12,7 @@
 import Foundation
 import CoreGraphics
 
-open class BarChartData: BarLineScatterCandleBubbleChartData
+public class BarChartData: BarLineScatterCandleBubbleChartData
 {
     public override init()
     {
@@ -27,7 +27,7 @@ open class BarChartData: BarLineScatterCandleBubbleChartData
     /// The width of the bars on the x-axis, in values (not pixels)
     ///
     /// **default**: 0.85
-    open var barWidth = Double(0.85)
+    public var barWidth = Double(0.85)
     
     /// Groups all BarDataSet objects this data object holds together by modifying the x-value of their entries.
     /// Previously set x-values of entries will be overwritten. Leaves space between bars and groups as specified by the parameters.
@@ -36,7 +36,7 @@ open class BarChartData: BarLineScatterCandleBubbleChartData
     /// - parameter the starting point on the x-axis where the grouping should begin
     /// - parameter groupSpace: The space between groups of bars in values (not pixels) e.g. 0.8f for bar width 1f
     /// - parameter barSpace: The space between individual bars in values (not pixels) e.g. 0.1f for bar width 1f
-    open func groupBars(fromX: Double, groupSpace: Double, barSpace: Double)
+    public func groupBars(fromX fromX: Double, groupSpace: Double, barSpace: Double)
     {
         let setCount = _dataSets.count
         if setCount <= 1
@@ -56,7 +56,7 @@ open class BarChartData: BarLineScatterCandleBubbleChartData
         
         let interval = groupWidth(groupSpace: groupSpace, barSpace: barSpace)
 
-        for i in stride(from: 0, to: maxEntryCount, by: 1)
+        for i in 0.stride(to: maxEntryCount, by: 1)
         {
             let start = fromX
             fromX += groupSpaceWidthHalf
@@ -98,7 +98,7 @@ open class BarChartData: BarLineScatterCandleBubbleChartData
     ///
     /// - parameter groupSpace:
     /// - parameter barSpace:
-    open func groupWidth(groupSpace: Double, barSpace: Double) -> Double
+    public func groupWidth(groupSpace groupSpace: Double, barSpace: Double) -> Double
     {
         return Double(_dataSets.count) * (self.barWidth + barSpace) + groupSpace
     }

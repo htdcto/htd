@@ -17,13 +17,13 @@ import CoreGraphics
 #endif
 
 @objc(ChartMarkerView)
-open class MarkerView: NSUIView, IMarker
+public class MarkerView: NSUIView, IMarker
 {
-    open var offset: CGPoint = CGPoint()
+    public var offset: CGPoint = CGPoint()
     
-    open weak var chartView: ChartViewBase?
+    public weak var chartView: ChartViewBase?
     
-    open func offsetForDrawingAtPos(_ point: CGPoint) -> CGPoint
+    public func offsetForDrawingAtPos(point: CGPoint) -> CGPoint
     {
         var offset = self.offset
         
@@ -53,32 +53,33 @@ open class MarkerView: NSUIView, IMarker
         return offset
     }
     
-    open func refreshContent(entry: ChartDataEntry, highlight: Highlight)
+    public func refreshContent(entry entry: ChartDataEntry, highlight: Highlight)
     {
         // Do nothing here...
     }
     
-    open func draw(context: CGContext, point: CGPoint)
+    public func draw(context context: CGContext, point: CGPoint)
     {
         let offset = self.offsetForDrawingAtPos(point)
         
-        context.saveGState()
-        context.translateBy(x: point.x + offset.x,
-                              y: point.y + offset.y)
+        CGContextSaveGState(context)
+        CGContextTranslateCTM(context,
+                              point.x + offset.x,
+                              point.y + offset.y)
         NSUIGraphicsPushContext(context)
-        self.nsuiLayer?.render(in: context)
+        self.nsuiLayer?.renderInContext(context)
         NSUIGraphicsPopContext()
-        context.restoreGState()
+        CGContextRestoreGState(context)
     }
     
     @objc
-    open class func viewFromXib() -> MarkerView?
+    public class func viewFromXib() -> MarkerView?
     {
         #if !os(OSX)
-            return Bundle.main.loadNibNamed(
-                String(describing: self),
+            return NSBundle.mainBundle().loadNibNamed(
+                String(self),
                 owner: nil,
-                options: nil)?[0] as? MarkerView
+                options: nil)![0] as? MarkerView
         #else
             
             let loadedObjects = AutoreleasingUnsafeMutablePointer<NSArray?>(nilLiteral: ())

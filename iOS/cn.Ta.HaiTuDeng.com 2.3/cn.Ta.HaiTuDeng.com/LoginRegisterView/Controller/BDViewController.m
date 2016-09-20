@@ -76,9 +76,7 @@
         [self showTheAlertView:self andAfterDissmiss:1.0 title:@"不能和自己绑定" message:@""];
     }
     else{
-
-      //[LDXNetWork GetThePHPWithURL:LOGIN par:dic success:^(id responseObject)
-       [LDXNetWork GetThePHPWithURL:address(@"/bindcheck.php") par:dic success:^(id responseObject) {
+        [LDXNetWork GetThePHPWithURL:address(@"/bindcheck.php") par:dic success:^(id responseObject) {
            NSString *i = [responseObject objectForKey:@"success"];
            int a = [i intValue];
            switch (a) {

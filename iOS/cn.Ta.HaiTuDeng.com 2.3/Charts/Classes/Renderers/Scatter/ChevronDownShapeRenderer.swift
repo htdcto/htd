@@ -10,10 +10,10 @@
 //
 import Foundation
 
-open class ChevronDownShapeRenderer : NSObject, IShapeRenderer
+public class ChevronDownShapeRenderer : NSObject, IShapeRenderer
 {
-    open func renderShape(
-        context: CGContext,
+    public func renderShape(
+        context context: CGContext,
                 dataSet: IScatterChartDataSet,
                 viewPortHandler: ViewPortHandler,
                 point: CGPoint,
@@ -22,14 +22,14 @@ open class ChevronDownShapeRenderer : NSObject, IShapeRenderer
         let shapeSize = dataSet.scatterShapeSize
         let shapeHalf = shapeSize / 2.0
         
-        context.setLineWidth(1.0)
-        context.setStrokeColor(color.cgColor)
+        CGContextSetLineWidth(context, 1.0)
+        CGContextSetStrokeColorWithColor(context, color.CGColor)
         
-        context.beginPath()
-        context.move(to: CGPoint(x: point.x, y: point.y + 2 * shapeHalf))
-        context.addLine(to: CGPoint(x: point.x + 2 * shapeHalf, y: point.y))
-        context.move(to: CGPoint(x: point.x, y: point.y + 2 * shapeHalf))
-        context.addLine(to: CGPoint(x: point.x - 2 * shapeHalf, y: point.y))
-        context.strokePath()
+        CGContextBeginPath(context)
+        CGContextMoveToPoint(context, point.x, point.y + 2 * shapeHalf)
+        CGContextAddLineToPoint(context, point.x + 2 * shapeHalf, point.y)
+        CGContextMoveToPoint(context, point.x, point.y + 2 * shapeHalf)
+        CGContextAddLineToPoint(context, point.x - 2 * shapeHalf, point.y)
+        CGContextStrokePath(context)
     }
 }

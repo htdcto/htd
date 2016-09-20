@@ -13,9 +13,9 @@ import Foundation
 import CoreGraphics
 
 @objc(HorizontalBarChartHighlighter)
-open class HorizontalBarHighlighter: BarHighlighter
+public class HorizontalBarHighlighter: BarHighlighter
 {
-    open override func getHighlight(x: CGFloat, y: CGFloat) -> Highlight?
+    public override func getHighlight(x x: CGFloat, y: CGFloat) -> Highlight?
     {
         if let barData = self.chart?.data as? BarChartData
         {
@@ -25,7 +25,7 @@ open class HorizontalBarHighlighter: BarHighlighter
                 else { return nil }
             
             if let set = barData.getDataSetByIndex(high.dataSetIndex) as? IBarChartDataSet
-                , set.isStacked
+                where set.isStacked
             {
                 return getStackedHighlight(high: high,
                                            set: set,
@@ -57,7 +57,7 @@ open class HorizontalBarHighlighter: BarHighlighter
         return nil
     }
     
-    internal override func getDistance(x1: CGFloat, y1: CGFloat, x2: CGFloat, y2: CGFloat) -> CGFloat
+    internal override func getDistance(x1 x1: CGFloat, y1: CGFloat, x2: CGFloat, y2: CGFloat) -> CGFloat
     {
         return abs(y1 - y2)
     }

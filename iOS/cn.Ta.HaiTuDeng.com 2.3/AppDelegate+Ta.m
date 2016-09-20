@@ -8,7 +8,8 @@
 
 #import "AppDelegate+Ta.h"
 #import "LoginViewController.h"
-
+@interface AppDelegate ()
+@end
 @implementation AppDelegate (Ta)
 
 -(void)taApplication:(UIApplication *)application
@@ -19,12 +20,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //登录注册状态监听
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginStateChange:) name:NOTIFICATION_LOGINCHANGE object:nil];
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_LOGINCHANGE object:@NO];
     [Helper shareHelper];
     [self isAuotoLogin];
 }
-
 
 -(void)isAuotoLogin
 {
@@ -65,6 +64,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
     }
     [self.window setRootViewController:self.navigationController];
 }
+
+
+
 
 
 @end

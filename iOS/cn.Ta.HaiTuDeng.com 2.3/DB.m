@@ -158,7 +158,10 @@
         }
 }
 
-
+-(void)closeDB
+{
+     sqlite3_close(db);
+}
 
 -(NSArray *)upTimestamp:(NSDate *)dayOfSearching//刷新左侧具体时间表格子
 {

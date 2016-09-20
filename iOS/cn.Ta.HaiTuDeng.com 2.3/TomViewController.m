@@ -58,9 +58,10 @@
     if ([[EMClient sharedClient] isLoggedIn]) {
         EMError *error = [[EMClient sharedClient] logout:YES];
         if (error != nil){
-            NSLog(@"%@",error);
+            NSLog(@"退出错误的原因:%@",error);
+            [self showTheAlertView:self andAfterDissmiss:2.0 title:(NSLocalizedString(@"退出失败，请检查网络", @"logout failed")) message:@""];
+            return;
         }else{
-            NSLog(@"退出成功");
             //移除UserDefaults中存储的用户信息
             [userDefaults removeObjectForKey:@"name"];
             [userDefaults removeObjectForKey:@"password"];
@@ -68,9 +69,8 @@
             [userDefaults removeObjectForKey:@"BDTime"];
             [userDefaults removeObjectForKey:@"expert"];
             [userDefaults synchronize];
-            
             DB *db = [DB shareInit];
-            
+            [db closeDB];
             
             //登出友盟
             [MobClick profileSignOff];

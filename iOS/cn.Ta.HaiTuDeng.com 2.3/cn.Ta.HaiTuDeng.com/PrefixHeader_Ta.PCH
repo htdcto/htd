@@ -28,6 +28,9 @@
 //登录
 #define NOTIFICATION_LOGINCHANGE @"loginStateChange"
 #define NOTIFICATION_LOGOUTCHANGE @"logoutStateChange"
+//网络提示
+#define NOTIFICATION_NETWORKALERT @"networkAlert"
+#define NOTIFICATION_NETWORKRECOVER @"networkRecover"
 
 //第三方库的pch
 #import "Define.h"

@@ -165,15 +165,12 @@
                     _localLoad = NO;
                 }
                 [self.dataArray addObject:model];
-
-
             }
             [self.tableView reloadData];
     }else{
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
     } error:^(NSError *error) {
-         [self showTheAlertView:self andAfterDissmiss:1.0 title:(NSLocalizedString(@"加载失败，请检查网络", @"No network connection!")) message:@""];
     }];
     [self.tableView.mj_header endRefreshing];
     [self.tableView.mj_footer endRefreshing];

@@ -11,13 +11,13 @@
 
 import Foundation
 
-open class ChartDataEntryBase: NSObject
+public class ChartDataEntryBase: NSObject
 {
     /// the y value
-    open var y = Double(0.0)
+    public var y = Double(0.0)
     
     /// optional spot for additional data this Entry represents
-    open var data: AnyObject?
+    public var data: AnyObject?
     
     public override required init()
     {
@@ -46,24 +46,24 @@ open class ChartDataEntryBase: NSObject
     
     // MARK: NSObject
     
-    open override func isEqual(_ object: Any?) -> Bool
+    public override func isEqual(object: AnyObject?) -> Bool
     {
-        if object == nil
+        if object === nil
         {
             return false
         }
         
-        if !(object! as AnyObject).isKind(of: type(of: self))
+        if !object!.isKindOfClass(self.dynamicType)
         {
             return false
         }
         
-        if (object! as AnyObject).data !== data && !((object! as AnyObject).data??.isEqual(self.data))!
+        if object!.data !== data && !object!.data.isEqual(self.data)
         {
             return false
         }
         
-        if fabs((object! as AnyObject).y - y) > DBL_EPSILON
+        if fabs(object!.y - y) > DBL_EPSILON
         {
             return false
         }
@@ -73,7 +73,7 @@ open class ChartDataEntryBase: NSObject
     
     // MARK: NSObject
     
-    open override var description: String
+    public override var description: String
     {
         return "ChartDataEntryBase, y \(y)"
     }
@@ -86,7 +86,7 @@ public func ==(lhs: ChartDataEntryBase, rhs: ChartDataEntryBase) -> Bool
         return true
     }
     
-    if !lhs.isKind(of: type(of: rhs))
+    if !lhs.isKindOfClass(rhs.dynamicType)
     {
         return false
     }

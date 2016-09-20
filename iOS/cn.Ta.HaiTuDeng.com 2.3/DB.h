@@ -21,5 +21,6 @@
 -(NSArray *)upTimestamp:(NSDate *)dayOfSearching;
 -(NSMutableArray *)caculateTheCountOfTimestampFromServer:(NSDate *)searchingMonday;
 -(void)createDBPath;
+-(void)closeDB;
 
 @end

@@ -112,11 +112,11 @@
             }
             else{
                 success(NO);
-                [self showTheAlertView:self andAfterDissmiss:1.0 title:@"账号或密码错误" message:@""];
+                [self showTheAlertView:self andAfterDissmiss:1.0 title:(NSLocalizedString(@"账号或密码错误", @"uncorrect account or password")) message:@""];
             }
         } error:^(NSError *error) {
             success(NO);
-        [self showTheAlertView:self andAfterDissmiss:2.0 title:@"服务器故障，请稍候再试" message:@""];
+        [self showTheAlertView:self andAfterDissmiss:2.0 title:(NSLocalizedString(@"连接服务器失败", @"Connect to the server failed!")) message:@""];
         }];
 }
 
@@ -149,7 +149,7 @@
                     [self showTheAlertView:self andAfterDissmiss:1.0 title:(NSLocalizedString(@"连接超时", @"Connect to the server timed out!")) message:@""];
                     break;
                 default:
-                    [self showTheAlertView:self andAfterDissmiss:1.0 title:(NSLocalizedString(@"登录失败", @"Login failure")) message:@""];
+                    [self showTheAlertView:self andAfterDissmiss:1.0 title:(NSLocalizedString(@"账号或密码错误", @"uncorrect account or password")) message:@""];
                     status = 0;
                     break;
 

@@ -17,9 +17,9 @@ import CoreGraphics
 #endif
 
 
-open class ScatterChartRenderer: LineScatterCandleRadarRenderer
+public class ScatterChartRenderer: LineScatterCandleRadarRenderer
 {
-    open weak var dataProvider: ScatterChartDataProvider?
+    public weak var dataProvider: ScatterChartDataProvider?
     
     public init(dataProvider: ScatterChartDataProvider?, animator: Animator?, viewPortHandler: ViewPortHandler?)
     {
@@ -28,7 +28,7 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
         self.dataProvider = dataProvider
     }
     
-    open override func drawData(context: CGContext)
+    public override func drawData(context context: CGContext)
     {
         guard let scatterData = dataProvider?.scatterData else { return }
         
@@ -48,14 +48,14 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
         }
     }
     
-    fileprivate var _lineSegments = [CGPoint](repeating: CGPoint(), count: 2)
+    private var _lineSegments = [CGPoint](count: 2, repeatedValue: CGPoint())
     
-    open func drawDataSet(context: CGContext, dataSet: IScatterChartDataSet)
+    public func drawDataSet(context context: CGContext, dataSet: IScatterChartDataSet)
     {
         guard let
             dataProvider = dataProvider,
-            let animator = animator,
-            let viewPortHandler = self.viewPortHandler
+            animator = animator,
+            viewPortHandler = self.viewPortHandler
             else { return }
         
         let trans = dataProvider.getTransformer(dataSet.axisDependency)
@@ -70,7 +70,7 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
         
         if let renderer = dataSet.shapeRenderer
         {
-            context.saveGState()
+            CGContextSaveGState(context)
             
             for j in 0 ..< Int(min(ceil(Double(entryCount) * animator.phaseX), Double(entryCount)))
             {
@@ -78,7 +78,7 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
                 
                 point.x = CGFloat(e.x)
                 point.y = CGFloat(e.y * phaseY)
-                point = point.applying(valueToPixelMatrix);
+                point = CGPointApplyAffineTransform(point, valueToPixelMatrix);
                 
                 if !viewPortHandler.isInBoundsRight(point.x)
                 {
@@ -94,7 +94,7 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
                 renderer.renderShape(context: context, dataSet: dataSet, viewPortHandler: viewPortHandler, point: point, color: dataSet.colorAt(j))
             }
             
-            context.restoreGState()
+            CGContextRestoreGState(context)
         }
         else
         {
@@ -102,13 +102,13 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
         }
     }
     
-    open override func drawValues(context: CGContext)
+    public override func drawValues(context context: CGContext)
     {
         guard let
             dataProvider = dataProvider,
-            let scatterData = dataProvider.scatterData,
-            let animator = animator,
-            let viewPortHandler = self.viewPortHandler
+            scatterData = dataProvider.scatterData,
+            animator = animator,
+            viewPortHandler = self.viewPortHandler
             else { return }
         
         // if values are drawn
@@ -141,13 +141,13 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
                 
                 _xBounds.set(chart: dataProvider, dataSet: dataSet, animator: animator)
                 
-                for j in stride(from: _xBounds.min, through: _xBounds.range + _xBounds.min, by: 1)
+                for j in _xBounds.min.stride(through: _xBounds.range + _xBounds.min, by: 1)
                 {
                     guard let e = dataSet.entryForIndex(j) else { break }
                     
                     pt.x = CGFloat(e.x)
                     pt.y = CGFloat(e.y * phaseY)
-                    pt = pt.applying(valueToPixelMatrix)
+                    pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
                     
                     if (!viewPortHandler.isInBoundsRight(pt.x))
                     {
@@ -173,7 +173,7 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
                         point: CGPoint(
                             x: pt.x,
                             y: pt.y - shapeSize - lineHeight),
-                        align: .center,
+                        align: .Center,
                         attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: dataSet.valueTextColorAt(j)]
                     )
                 }
@@ -181,27 +181,27 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
         }
     }
     
-    open override func drawExtras(context: CGContext)
+    public override func drawExtras(context context: CGContext)
     {
         
     }
     
-    open override func drawHighlighted(context: CGContext, indices: [Highlight])
+    public override func drawHighlighted(context context: CGContext, indices: [Highlight])
     {
         guard let
             dataProvider = dataProvider,
-            let scatterData = dataProvider.scatterData,
-            let animator = animator
+            scatterData = dataProvider.scatterData,
+            animator = animator
             else { return }
         
         let chartXMax = dataProvider.chartXMax
         
-        context.saveGState()
+        CGContextSaveGState(context)
         
         for high in indices
         {
             guard let set = scatterData.getDataSetByIndex(high.dataSetIndex) as? IScatterChartDataSet
-                , set.isHighlightEnabled
+                where set.isHighlightEnabled
                 else { continue }
             
             guard let e = set.entryForIndex(Int(high.x))
@@ -212,8 +212,8 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
                 continue
             }
         
-            context.setStrokeColor(set.highlightColor.cgColor)
-            context.setLineWidth(set.highlightLineWidth)
+            CGContextSetStrokeColorWithColor(context, set.highlightColor.CGColor)
+            CGContextSetLineWidth(context, set.highlightLineWidth)
             if (set.highlightLineDashLengths != nil)
             {
                 CGContextSetLineDash(context, set.highlightLineDashPhase, set.highlightLineDashLengths!, set.highlightLineDashLengths!.count)
@@ -241,6 +241,6 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
             drawHighlightLines(context: context, point: pt, set: set)
         }
         
-        context.restoreGState()
+        CGContextRestoreGState(context)
     }
 }

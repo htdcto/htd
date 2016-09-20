@@ -10,10 +10,10 @@
 //
 import Foundation
 
-open class TriangleShapeRenderer : NSObject, IShapeRenderer
+public class TriangleShapeRenderer : NSObject, IShapeRenderer
 {
-    open func renderShape(
-        context: CGContext,
+    public func renderShape(
+        context context: CGContext,
                 dataSet: IScatterChartDataSet,
                 viewPortHandler: ViewPortHandler,
                 point: CGPoint,
@@ -26,40 +26,40 @@ open class TriangleShapeRenderer : NSObject, IShapeRenderer
         let shapeHoleColor = dataSet.scatterShapeHoleColor
         let shapeStrokeSize = (shapeSize - shapeHoleSize) / 2.0
         
-        context.setFillColor(color.cgColor)
+        CGContextSetFillColorWithColor(context, color.CGColor)
         
         // create a triangle path
-        context.beginPath()
-        context.move(to: CGPoint(x: point.x, y: point.y - shapeHalf))
-        context.addLine(to: CGPoint(x: point.x + shapeHalf, y: point.y + shapeHalf))
-        context.addLine(to: CGPoint(x: point.x - shapeHalf, y: point.y + shapeHalf))
+        CGContextBeginPath(context)
+        CGContextMoveToPoint(context, point.x, point.y - shapeHalf)
+        CGContextAddLineToPoint(context, point.x + shapeHalf, point.y + shapeHalf)
+        CGContextAddLineToPoint(context, point.x - shapeHalf, point.y + shapeHalf)
         
         if shapeHoleSize > 0.0
         {
-            context.addLine(to: CGPoint(x: point.x, y: point.y - shapeHalf))
+            CGContextAddLineToPoint(context, point.x, point.y - shapeHalf)
             
-            context.move(to: CGPoint(x: point.x - shapeHalf + shapeStrokeSize, y: point.y + shapeHalf - shapeStrokeSize))
-            context.addLine(to: CGPoint(x: point.x + shapeHalf - shapeStrokeSize, y: point.y + shapeHalf - shapeStrokeSize))
-            context.addLine(to: CGPoint(x: point.x, y: point.y - shapeHalf + shapeStrokeSize))
-            context.addLine(to: CGPoint(x: point.x - shapeHalf + shapeStrokeSize, y: point.y + shapeHalf - shapeStrokeSize))
+            CGContextMoveToPoint(context, point.x - shapeHalf + shapeStrokeSize, point.y + shapeHalf - shapeStrokeSize)
+            CGContextAddLineToPoint(context, point.x + shapeHalf - shapeStrokeSize, point.y + shapeHalf - shapeStrokeSize)
+            CGContextAddLineToPoint(context, point.x, point.y - shapeHalf + shapeStrokeSize)
+            CGContextAddLineToPoint(context, point.x - shapeHalf + shapeStrokeSize, point.y + shapeHalf - shapeStrokeSize)
         }
         
-        context.closePath()
+        CGContextClosePath(context)
         
-        context.fillPath()
+        CGContextFillPath(context)
         
         if shapeHoleSize > 0.0 && shapeHoleColor != nil
         {
-            context.setFillColor(shapeHoleColor!.cgColor)
+            CGContextSetFillColorWithColor(context, shapeHoleColor!.CGColor)
             
             // create a triangle path
-            context.beginPath()
-            context.move(to: CGPoint(x: point.x, y: point.y - shapeHalf + shapeStrokeSize))
-            context.addLine(to: CGPoint(x: point.x + shapeHalf - shapeStrokeSize, y: point.y + shapeHalf - shapeStrokeSize))
-            context.addLine(to: CGPoint(x: point.x - shapeHalf + shapeStrokeSize, y: point.y + shapeHalf - shapeStrokeSize))
-            context.closePath()
+            CGContextBeginPath(context)
+            CGContextMoveToPoint(context, point.x, point.y - shapeHalf + shapeStrokeSize)
+            CGContextAddLineToPoint(context, point.x + shapeHalf - shapeStrokeSize, point.y + shapeHalf - shapeStrokeSize)
+            CGContextAddLineToPoint(context, point.x - shapeHalf + shapeStrokeSize, point.y + shapeHalf - shapeStrokeSize)
+            CGContextClosePath(context)
             
-            context.fillPath()
+            CGContextFillPath(context)
         }
     }
 }

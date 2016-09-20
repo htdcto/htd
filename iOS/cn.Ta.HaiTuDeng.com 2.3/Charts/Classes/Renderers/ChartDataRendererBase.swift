@@ -13,9 +13,9 @@ import Foundation
 import CoreGraphics
 
 @objc(ChartDataRendererBase)
-open class DataRenderer: Renderer
+public class DataRenderer: Renderer
 {
-    open var animator: Animator?
+    public var animator: Animator?
     
     public init(animator: Animator?, viewPortHandler: ViewPortHandler?)
     {
@@ -24,17 +24,17 @@ open class DataRenderer: Renderer
         self.animator = animator
     }
 
-    open func drawData(context: CGContext)
+    public func drawData(context context: CGContext)
     {
         fatalError("drawData() cannot be called on DataRenderer")
     }
     
-    open func drawValues(context: CGContext)
+    public func drawValues(context context: CGContext)
     {
         fatalError("drawValues() cannot be called on DataRenderer")
     }
     
-    open func drawExtras(context: CGContext)
+    public func drawExtras(context context: CGContext)
     {
         fatalError("drawExtras() cannot be called on DataRenderer")
     }
@@ -42,16 +42,16 @@ open class DataRenderer: Renderer
     /// Draws all highlight indicators for the values that are currently highlighted.
     ///
     /// - parameter indices: the highlighted values
-    open func drawHighlighted(context: CGContext, indices: [Highlight])
+    public func drawHighlighted(context context: CGContext, indices: [Highlight])
     {
         fatalError("drawHighlighted() cannot be called on DataRenderer")
     }
     
     /// An opportunity for initializing internal buffers used for rendering with a new size.
     /// Since this might do memory allocations, it should only be called if necessary.
-    open func initBuffers() { }
+    public func initBuffers() { }
     
-    open func isDrawingValuesAllowed(dataProvider: ChartDataProvider?) -> Bool
+    public func isDrawingValuesAllowed(dataProvider dataProvider: ChartDataProvider?) -> Bool
     {
         guard let data = dataProvider?.data
             else { return false }

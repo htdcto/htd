@@ -16,7 +16,7 @@ import CoreGraphics
     import UIKit
 #endif
 
-open class AnimatedMoveViewJob: AnimatedViewPortJob
+public class AnimatedMoveViewJob: AnimatedViewPortJob
 {
     public override init(
         viewPortHandler: ViewPortHandler,
@@ -26,7 +26,7 @@ open class AnimatedMoveViewJob: AnimatedViewPortJob
         view: ChartViewBase,
         xOrigin: CGFloat,
         yOrigin: CGFloat,
-        duration: TimeInterval,
+        duration: NSTimeInterval,
         easing: ChartEasingFunctionBlock?)
     {
         super.init(viewPortHandler: viewPortHandler,
@@ -44,8 +44,8 @@ open class AnimatedMoveViewJob: AnimatedViewPortJob
     {
         guard let
             viewPortHandler = viewPortHandler,
-            let transformer = transformer,
-            let view = view
+            transformer = transformer,
+            view = view
             else { return }
         
         var pt = CGPoint(

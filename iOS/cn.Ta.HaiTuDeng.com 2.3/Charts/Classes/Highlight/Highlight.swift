@@ -12,39 +12,39 @@
 import Foundation
 
 @objc(ChartHighlight)
-open class Highlight: NSObject
+public class Highlight: NSObject
 {
     /// the x-value of the highlighted value
-    fileprivate var _x = Double.nan
+    private var _x = Double.NaN
     
     /// the y-value of the highlighted value
-    fileprivate var _y = Double.nan
+    private var _y = Double.NaN
     
     /// the x-pixel of the highlight
-    fileprivate var _xPx = CGFloat.nan
+    private var _xPx = CGFloat.NaN
     
     /// the y-pixel of the highlight
-    fileprivate var _yPx = CGFloat.nan
+    private var _yPx = CGFloat.NaN
     
     /// the index of the data object - in case it refers to more than one
-    open var dataIndex = Int(-1)
+    public var dataIndex = Int(-1)
     
     /// the index of the dataset the highlighted value is in
-    fileprivate var _dataSetIndex = Int(0)
+    private var _dataSetIndex = Int(0)
     
     /// index which value of a stacked bar entry is highlighted
     /// 
     /// **default**: -1
-    fileprivate var _stackIndex = Int(-1)
+    private var _stackIndex = Int(-1)
     
     /// the axis the highlighted value belongs to
-    fileprivate var _axis: YAxis.AxisDependency = YAxis.AxisDependency.left
+    private var _axis: YAxis.AxisDependency = YAxis.AxisDependency.Left
     
     /// the x-position (pixels) on which this highlight object was last drawn
-    open var drawX: CGFloat = 0.0
+    public var drawX: CGFloat = 0.0
     
     /// the y-position (pixels) on which this highlight object was last drawn
-    open var drawY: CGFloat = 0.0
+    public var drawY: CGFloat = 0.0
     
     public override init()
     {
@@ -141,25 +141,25 @@ open class Highlight: NSObject
         _stackIndex = stackIndex
     }
     
-    open var x: Double { return _x }
-    open var y: Double { return _y }
-    open var xPx: CGFloat { return _xPx }
-    open var yPx: CGFloat { return _yPx }
-    open var dataSetIndex: Int { return _dataSetIndex }
-    open var stackIndex: Int { return _stackIndex }
-    open var axis: YAxis.AxisDependency { return _axis }
+    public var x: Double { return _x }
+    public var y: Double { return _y }
+    public var xPx: CGFloat { return _xPx }
+    public var yPx: CGFloat { return _yPx }
+    public var dataSetIndex: Int { return _dataSetIndex }
+    public var stackIndex: Int { return _stackIndex }
+    public var axis: YAxis.AxisDependency { return _axis }
     
-    open var isStacked: Bool { return _stackIndex >= 0 }
+    public var isStacked: Bool { return _stackIndex >= 0 }
     
     /// Sets the x- and y-position (pixels) where this highlight was last drawn.
-    open func setDraw(x: CGFloat, y: CGFloat)
+    public func setDraw(x x: CGFloat, y: CGFloat)
     {
         self.drawX = x
         self.drawY = y
     }
     
     /// Sets the x- and y-position (pixels) where this highlight was last drawn.
-    open func setDraw(pt: CGPoint)
+    public func setDraw(pt pt: CGPoint)
     {
         self.drawX = pt.x
         self.drawY = pt.y
@@ -167,44 +167,44 @@ open class Highlight: NSObject
 
     // MARK: NSObject
     
-    open override var description: String
+    public override var description: String
     {
         return "Highlight, x: \(_x), y: \(_y), dataIndex (combined charts): \(dataIndex), dataSetIndex: \(_dataSetIndex), stackIndex (only stacked barentry): \(_stackIndex)"
     }
     
-    open override func isEqual(_ object: Any?) -> Bool
+    public override func isEqual(object: AnyObject?) -> Bool
     {
-        if (object == nil)
+        if (object === nil)
         {
             return false
         }
         
-        if (!(object! as AnyObject).isKind(of: type(of: self)))
+        if (!object!.isKindOfClass(self.dynamicType))
         {
             return false
         }
         
-        if ((object! as AnyObject).x != _x)
+        if (object!.x != _x)
         {
             return false
         }
         
-        if ((object! as AnyObject).y != _y)
+        if (object!.y != _y)
         {
             return false
         }
         
-        if ((object! as AnyObject).dataIndex != dataIndex)
+        if (object!.dataIndex != dataIndex)
         {
             return false
         }
         
-        if ((object! as AnyObject).dataSetIndex != _dataSetIndex)
+        if (object!.dataSetIndex != _dataSetIndex)
         {
             return false
         }
         
-        if ((object! as AnyObject).stackIndex != _stackIndex)
+        if (object!.stackIndex != _stackIndex)
         {
             return false
         }
@@ -220,7 +220,7 @@ func ==(lhs: Highlight, rhs: Highlight) -> Bool
         return true
     }
     
-    if (!lhs.isKind(of: type(of: rhs)))
+    if (!lhs.isKindOfClass(rhs.dynamicType))
     {
         return false
     }

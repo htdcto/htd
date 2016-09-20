@@ -25,9 +25,7 @@ static NSString *kConversationChatter = @"ConversationChatter";
     
 }
 
-
-
-
+@property (nonatomic,strong)UILabel *networkAlert;
 @property (strong, nonatomic) NSDate *lastPlaySoundDate;
 
 @end
@@ -39,6 +37,7 @@ static NSString *kConversationChatter = @"ConversationChatter";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setMavcUnread) name:@"setMavcUnread" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStatusUpdate) name:@"setStatusUpdate" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setExpertUnread) name:@"setExpertUnread" object:nil];
+    
     self.title = NSLocalizedString(@"首页", @"Main");
     [self setSubview];
     self.selectedIndex = 0;
@@ -148,7 +147,21 @@ static NSString *kConversationChatter = @"ConversationChatter";
     NSString *another = [[NSUserDefaults standardUserDefaults]objectForKey:@"Ttel"];
     [[EMClient sharedClient].chatManager getConversation:another type:EMConversationTypeChat createIfNotExist:YES];
 }
-
+//网络不佳的提示通知
+-(void)showNetworkAlert:(NSNotification *)notification :(EMConnectionState)connectionState
+{
+    if (connectionState == EMConnectionDisconnected){
+        _networkAlert = [[UILabel alloc]initWithFrame:CGRectMake(0,10, [UIScreen mainScreen].bounds.size.width, 30)];
+        self.networkAlert.backgroundColor = [[UIColor redColor]colorWithAlphaComponent:0.5];
+        self.networkAlert.text = @"当前网络不佳,请重试";
+        self.networkAlert.textAlignment = UITextAlignmentCenter;
+        UIWindow * window = [[UIApplication sharedApplication].windows lastObject];
+        [window addSubview:self.networkAlert];
+    }
+    else{
+        [self.networkAlert removeFromSuperview];
+    }
+ }
 
 //统计未读消息
 -(void)setMavcUnread

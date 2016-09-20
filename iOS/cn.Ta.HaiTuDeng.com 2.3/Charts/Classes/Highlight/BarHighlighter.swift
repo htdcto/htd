@@ -13,9 +13,9 @@ import Foundation
 import CoreGraphics
 
 @objc(BarChartHighlighter)
-open class BarHighlighter: ChartHighlighter
+public class BarHighlighter: ChartHighlighter
 {
-    open override func getHighlight(x: CGFloat, y: CGFloat) -> Highlight?
+    public override func getHighlight(x x: CGFloat, y: CGFloat) -> Highlight?
     {
         let high = super.getHighlight(x: x, y: y)
         
@@ -29,7 +29,7 @@ open class BarHighlighter: ChartHighlighter
             let pos = getValsForTouch(x: x, y: y)
             
             if let set = barData.getDataSetByIndex(high!.dataSetIndex) as? IBarChartDataSet
-                , set.isStacked
+                where set.isStacked
             {
                 return getStackedHighlight(high: high!,
                                            set: set,
@@ -42,7 +42,7 @@ open class BarHighlighter: ChartHighlighter
         return nil
     }
     
-    internal override func getDistance(x1: CGFloat, y1: CGFloat, x2: CGFloat, y2: CGFloat) -> CGFloat
+    internal override func getDistance(x1 x1: CGFloat, y1: CGFloat, x2: CGFloat, y2: CGFloat) -> CGFloat
     {
         return abs(x1 - x2)
     }
@@ -58,14 +58,14 @@ open class BarHighlighter: ChartHighlighter
     /// - parameter xIndex:
     /// - parameter yValue:
     /// - returns:
-    open func getStackedHighlight(high: Highlight,
+    public func getStackedHighlight(high high: Highlight,
                                          set: IBarChartDataSet,
                                          xValue: Double,
                                          yValue: Double) -> Highlight?
     {
         guard let
             chart = self.chart as? BarLineScatterCandleBubbleChartDataProvider,
-            let entry = set.entryForXValue(xValue) as? BarChartDataEntry
+            entry = set.entryForXValue(xValue) as? BarChartDataEntry
             else { return nil }
         
         // Not stacked
@@ -75,7 +75,7 @@ open class BarHighlighter: ChartHighlighter
         }
         
         if let ranges = entry.ranges
-            , ranges.count > 0
+            where ranges.count > 0
         {
             let stackIndex = getClosestStackIndex(ranges: ranges, value: yValue)
             
@@ -99,7 +99,7 @@ open class BarHighlighter: ChartHighlighter
     /// - parameter entry:
     /// - parameter value:
     /// - returns:
-    open func getClosestStackIndex(ranges: [Range]?, value: Double) -> Int
+    public func getClosestStackIndex(ranges ranges: [Range]?, value: Double) -> Int
     {
         if ranges == nil
         {

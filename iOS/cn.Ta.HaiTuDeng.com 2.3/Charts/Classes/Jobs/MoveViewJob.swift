@@ -17,7 +17,7 @@ import CoreGraphics
 #endif
 
 @objc(MoveChartViewJob)
-open class MoveViewJob: ViewPortJob
+public class MoveViewJob: ViewPortJob
 {
     public override init(
         viewPortHandler: ViewPortHandler,
@@ -34,12 +34,12 @@ open class MoveViewJob: ViewPortJob
             view: view)
     }
     
-    open override func doJob()
+    public override func doJob()
     {
         guard let
             viewPortHandler = viewPortHandler,
-            let transformer = transformer,
-            let view = view
+            transformer = transformer,
+            view = view
             else { return }
         
         var pt = CGPoint(

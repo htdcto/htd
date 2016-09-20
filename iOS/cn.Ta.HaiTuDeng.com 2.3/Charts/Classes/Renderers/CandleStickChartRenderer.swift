@@ -17,9 +17,9 @@ import CoreGraphics
 #endif
 
 
-open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
+public class CandleStickChartRenderer: LineScatterCandleRadarRenderer
 {
-    open weak var dataProvider: CandleChartDataProvider?
+    public weak var dataProvider: CandleChartDataProvider?
     
     public init(dataProvider: CandleChartDataProvider?, animator: Animator?, viewPortHandler: ViewPortHandler?)
     {
@@ -28,9 +28,9 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
         self.dataProvider = dataProvider
     }
     
-    open override func drawData(context: CGContext)
+    public override func drawData(context context: CGContext)
     {
-        guard let dataProvider = dataProvider, let candleData = dataProvider.candleData else { return }
+        guard let dataProvider = dataProvider, candleData = dataProvider.candleData else { return }
 
         for set in candleData.dataSets as! [ICandleChartDataSet]
         {
@@ -41,18 +41,18 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
         }
     }
     
-    fileprivate var _shadowPoints = [CGPoint](repeating: CGPoint(), count: 4)
-    fileprivate var _rangePoints = [CGPoint](repeating: CGPoint(), count: 2)
-    fileprivate var _openPoints = [CGPoint](repeating: CGPoint(), count: 2)
-    fileprivate var _closePoints = [CGPoint](repeating: CGPoint(), count: 2)
-    fileprivate var _bodyRect = CGRect()
-    fileprivate var _lineSegments = [CGPoint](repeating: CGPoint(), count: 2)
+    private var _shadowPoints = [CGPoint](count: 4, repeatedValue: CGPoint())
+    private var _rangePoints = [CGPoint](count: 2, repeatedValue: CGPoint())
+    private var _openPoints = [CGPoint](count: 2, repeatedValue: CGPoint())
+    private var _closePoints = [CGPoint](count: 2, repeatedValue: CGPoint())
+    private var _bodyRect = CGRect()
+    private var _lineSegments = [CGPoint](count: 2, repeatedValue: CGPoint())
     
-    open func drawDataSet(context: CGContext, dataSet: ICandleChartDataSet)
+    public func drawDataSet(context context: CGContext, dataSet: ICandleChartDataSet)
     {
         guard let
             dataProvider = dataProvider,
-            let animator = animator
+            animator = animator
             else { return }
 
         let trans = dataProvider.getTransformer(dataSet.axisDependency)
@@ -63,11 +63,11 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
         
         _xBounds.set(chart: dataProvider, dataSet: dataSet, animator: animator)
         
-        context.saveGState()
+        CGContextSaveGState(context)
         
-        context.setLineWidth(dataSet.shadowWidth)
+        CGContextSetLineWidth(context, dataSet.shadowWidth)
         
-        for j in stride(from: _xBounds.min, through: _xBounds.range + _xBounds.min, by: 1)
+        for j in _xBounds.min.stride(through: _xBounds.range + _xBounds.min, by: 1)
         {
             // get the entry
             guard let e = dataSet.entryForIndex(j) as? CandleChartDataEntry else { continue }
@@ -136,7 +136,7 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
                     shadowColor = dataSet.shadowColor ?? dataSet.colorAt(j);
                 }
                 
-                context.setStrokeColor(shadowColor.cgColor)
+                CGContextSetStrokeColorWithColor(context, shadowColor.CGColor)
                 CGContextStrokeLineSegments(context, _shadowPoints, 4)
                 
                 // calculate the body
@@ -156,13 +156,13 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
                     
                     if (dataSet.isDecreasingFilled)
                     {
-                        context.setFillColor(color.cgColor)
-                        context.fill(_bodyRect)
+                        CGContextSetFillColorWithColor(context, color.CGColor)
+                        CGContextFillRect(context, _bodyRect)
                     }
                     else
                     {
-                        context.setStrokeColor(color.cgColor)
-                        context.stroke(_bodyRect)
+                        CGContextSetStrokeColorWithColor(context, color.CGColor)
+                        CGContextStrokeRect(context, _bodyRect)
                     }
                 }
                 else if (open < close)
@@ -171,21 +171,21 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
                     
                     if (dataSet.isIncreasingFilled)
                     {
-                        context.setFillColor(color.cgColor)
-                        context.fill(_bodyRect)
+                        CGContextSetFillColorWithColor(context, color.CGColor)
+                        CGContextFillRect(context, _bodyRect)
                     }
                     else
                     {
-                        context.setStrokeColor(color.cgColor)
-                        context.stroke(_bodyRect)
+                        CGContextSetStrokeColorWithColor(context, color.CGColor)
+                        CGContextStrokeRect(context, _bodyRect)
                     }
                 }
                 else
                 {
                     let color = dataSet.neutralColor ?? dataSet.colorAt(j)
                     
-                    context.setStrokeColor(color.cgColor)
-                    context.stroke(_bodyRect)
+                    CGContextSetStrokeColorWithColor(context, color.CGColor)
+                    CGContextStrokeRect(context, _bodyRect)
                 }
             }
             else
@@ -225,23 +225,23 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
                     barColor = dataSet.neutralColor ?? dataSet.colorAt(j)
                 }
                 
-                context.setStrokeColor(barColor.cgColor)
+                CGContextSetStrokeColorWithColor(context, barColor.CGColor)
                 CGContextStrokeLineSegments(context, _rangePoints, 2)
                 CGContextStrokeLineSegments(context, _openPoints, 2)
                 CGContextStrokeLineSegments(context, _closePoints, 2)
             }
         }
         
-        context.restoreGState()
+        CGContextRestoreGState(context)
     }
     
-    open override func drawValues(context: CGContext)
+    public override func drawValues(context context: CGContext)
     {
         guard let
             dataProvider = dataProvider,
-            let viewPortHandler = self.viewPortHandler,
-            let candleData = dataProvider.candleData,
-            let animator = animator
+            viewPortHandler = self.viewPortHandler,
+            candleData = dataProvider.candleData,
+            animator = animator
             else { return }
         
         // if values are drawn
@@ -275,13 +275,13 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
                 let lineHeight = valueFont.lineHeight
                 let yOffset: CGFloat = lineHeight + 5.0
                 
-                for j in stride(from: _xBounds.min, through: _xBounds.range + _xBounds.min, by: 1)
+                for j in _xBounds.min.stride(through: _xBounds.range + _xBounds.min, by: 1)
                 {
                     guard let e = dataSet.entryForIndex(j) as? CandleChartDataEntry else { break }
                     
                     pt.x = CGFloat(e.x)
                     pt.y = CGFloat(e.high * phaseY)
-                    pt = pt.applying(valueToPixelMatrix)
+                    pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
                     
                     if (!viewPortHandler.isInBoundsRight(pt.x))
                     {
@@ -303,31 +303,31 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
                         point: CGPoint(
                             x: pt.x,
                             y: pt.y - yOffset),
-                        align: .center,
+                        align: .Center,
                         attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: dataSet.valueTextColorAt(j)])
                 }
             }
         }
     }
     
-    open override func drawExtras(context: CGContext)
+    public override func drawExtras(context context: CGContext)
     {
     }
     
-    open override func drawHighlighted(context: CGContext, indices: [Highlight])
+    public override func drawHighlighted(context context: CGContext, indices: [Highlight])
     {
         guard let
             dataProvider = dataProvider,
-            let candleData = dataProvider.candleData,
-            let animator = animator
+            candleData = dataProvider.candleData,
+            animator = animator
             else { return }
         
-        context.saveGState()
+        CGContextSaveGState(context)
         
         for high in indices
         {
             guard let set = candleData.getDataSetByIndex(high.dataSetIndex) as? ICandleChartDataSet
-                , set.isHighlightEnabled
+                where set.isHighlightEnabled
                 else { continue }
             
             guard let e = set.entryForXValue(high.x) as? CandleChartDataEntry else { continue }
@@ -339,8 +339,8 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
             
             let trans = dataProvider.getTransformer(set.axisDependency)
             
-            context.setStrokeColor(set.highlightColor.cgColor)
-            context.setLineWidth(set.highlightLineWidth)
+            CGContextSetStrokeColorWithColor(context, set.highlightColor.CGColor)
+            CGContextSetLineWidth(context, set.highlightLineWidth)
             if (set.highlightLineDashLengths != nil)
             {
                 CGContextSetLineDash(context, set.highlightLineDashPhase, set.highlightLineDashLengths!, set.highlightLineDashLengths!.count)
@@ -362,6 +362,6 @@ open class CandleStickChartRenderer: LineScatterCandleRadarRenderer
             drawHighlightLines(context: context, point: pt, set: set)
         }
         
-        context.restoreGState()
+        CGContextRestoreGState(context)
     }
 }

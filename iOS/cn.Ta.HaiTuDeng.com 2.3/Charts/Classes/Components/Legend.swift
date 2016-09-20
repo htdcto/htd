@@ -17,122 +17,122 @@ import CoreGraphics
 #endif
 
 @objc(ChartLegend)
-open class Legend: ComponentBase
+public class Legend: ComponentBase
 {
     /// This property is deprecated - Use `position`, `horizontalAlignment`, `verticalAlignment`, `orientation`, `drawInside`, `direction`.
-    @available(*, deprecated: 1.0, message: "Use `position`, `horizontalAlignment`, `verticalAlignment`, `orientation`, `drawInside`, `direction`.")
+    @available(*, deprecated=1.0, message="Use `position`, `horizontalAlignment`, `verticalAlignment`, `orientation`, `drawInside`, `direction`.")
     @objc(ChartLegendPosition)
     public enum Position: Int
     {
-        case rightOfChart
-        case rightOfChartCenter
-        case rightOfChartInside
-        case leftOfChart
-        case leftOfChartCenter
-        case leftOfChartInside
-        case belowChartLeft
-        case belowChartRight
-        case belowChartCenter
-        case aboveChartLeft
-        case aboveChartRight
-        case aboveChartCenter
-        case piechartCenter
+        case RightOfChart
+        case RightOfChartCenter
+        case RightOfChartInside
+        case LeftOfChart
+        case LeftOfChartCenter
+        case LeftOfChartInside
+        case BelowChartLeft
+        case BelowChartRight
+        case BelowChartCenter
+        case AboveChartLeft
+        case AboveChartRight
+        case AboveChartCenter
+        case PiechartCenter
     }
     
     @objc(ChartLegendForm)
     public enum Form: Int
     {
         /// Avoid drawing a form
-        case none
+        case None
         
         /// Do not draw the a form, but leave space for it
-        case empty
+        case Empty
         
         /// Use default (default dataset's form to the legend's form)
-        case `default`
+        case Default
         
         /// Draw a square
-        case square
+        case Square
         
         /// Draw a circle
-        case circle
+        case Circle
         
         /// Draw a horizontal line
-        case line
+        case Line
     }
     
     @objc(ChartLegendHorizontalAlignment)
     public enum HorizontalAlignment: Int
     {
-        case left
-        case center
-        case right
+        case Left
+        case Center
+        case Right
     }
     
     @objc(ChartLegendVerticalAlignment)
     public enum VerticalAlignment: Int
     {
-        case top
-        case center
-        case bottom
+        case Top
+        case Center
+        case Bottom
     }
     
     @objc(ChartLegendOrientation)
     public enum Orientation: Int
     {
-        case horizontal
-        case vertical
+        case Horizontal
+        case Vertical
     }
     
     @objc(ChartLegendDirection)
     public enum Direction: Int
     {
-        case leftToRight
-        case rightToLeft
+        case LeftToRight
+        case RightToLeft
     }
     
     /// The legend entries array
-    open var entries = [LegendEntry]()
+    public var entries = [LegendEntry]()
     
     /// Entries that will be appended to the end of the auto calculated entries after calculating the legend.
     /// (if the legend has already been calculated, you will need to call notifyDataSetChanged() to let the changes take effect)
-    open var extraEntries = [LegendEntry]()
+    public var extraEntries = [LegendEntry]()
     
     /// Are the legend labels/colors a custom value or auto calculated? If false, then it's auto, if true, then custom.
     /// 
     /// **default**: false (automatic legend)
-    fileprivate var _isLegendCustom = false
+    private var _isLegendCustom = false
     
     /// This property is deprecated - Use `position`, `horizontalAlignment`, `verticalAlignment`, `orientation`, `drawInside`, `direction`.
-    @available(*, deprecated: 1.0, message: "Use `position`, `horizontalAlignment`, `verticalAlignment`, `orientation`, `drawInside`, `direction`.")
-    open var position: Position
+    @available(*, deprecated=1.0, message="Use `position`, `horizontalAlignment`, `verticalAlignment`, `orientation`, `drawInside`, `direction`.")
+    public var position: Position
     {
         get
         {
-            if orientation == .vertical && horizontalAlignment == .center && verticalAlignment == .center
+            if orientation == .Vertical && horizontalAlignment == .Center && verticalAlignment == .Center
             {
-                return .piechartCenter
+                return .PiechartCenter
             }
-            else if orientation == .horizontal
+            else if orientation == .Horizontal
             {
-                if verticalAlignment == .top
+                if verticalAlignment == .Top
                 {
-                    return horizontalAlignment == .left ? .aboveChartLeft : (horizontalAlignment == .right ? .aboveChartRight : .aboveChartCenter)
+                    return horizontalAlignment == .Left ? .AboveChartLeft : (horizontalAlignment == .Right ? .AboveChartRight : .AboveChartCenter)
                 }
                 else
                 {
-                    return horizontalAlignment == .left ? .belowChartLeft : (horizontalAlignment == .right ? .belowChartRight : .belowChartCenter)
+                    return horizontalAlignment == .Left ? .BelowChartLeft : (horizontalAlignment == .Right ? .BelowChartRight : .BelowChartCenter)
                 }
             }
             else
             {
-                if horizontalAlignment == .left
+                if horizontalAlignment == .Left
                 {
-                    return verticalAlignment == .top && drawInside ? .leftOfChartInside : (verticalAlignment == .center ? .leftOfChartCenter : .leftOfChart)
+                    return verticalAlignment == .Top && drawInside ? .LeftOfChartInside : (verticalAlignment == .Center ? .LeftOfChartCenter : .LeftOfChart)
                 }
                 else
                 {
-                    return verticalAlignment == .top && drawInside ? .rightOfChartInside : (verticalAlignment == .center ? .rightOfChartCenter : .rightOfChart)
+                    return verticalAlignment == .Top && drawInside ? .RightOfChartInside : (verticalAlignment == .Center ? .RightOfChartCenter : .RightOfChart)
                 }
             }
         }
@@ -140,94 +140,94 @@ open class Legend: ComponentBase
         {
             switch newValue
             {
-            case .leftOfChart: fallthrough
-            case .leftOfChartInside: fallthrough
-            case .leftOfChartCenter:
-                horizontalAlignment = .left
-                verticalAlignment = newValue == .leftOfChartCenter ? .center : .top
-                orientation = .vertical
+            case .LeftOfChart: fallthrough
+            case .LeftOfChartInside: fallthrough
+            case .LeftOfChartCenter:
+                horizontalAlignment = .Left
+                verticalAlignment = newValue == .LeftOfChartCenter ? .Center : .Top
+                orientation = .Vertical
                 
-            case .rightOfChart: fallthrough
-            case .rightOfChartInside: fallthrough
-            case .rightOfChartCenter:
-                horizontalAlignment = .right
-                verticalAlignment = newValue == .rightOfChartCenter ? .center : .top
-                orientation = .vertical
+            case .RightOfChart: fallthrough
+            case .RightOfChartInside: fallthrough
+            case .RightOfChartCenter:
+                horizontalAlignment = .Right
+                verticalAlignment = newValue == .RightOfChartCenter ? .Center : .Top
+                orientation = .Vertical
                 
-            case .aboveChartLeft: fallthrough
-            case .aboveChartCenter: fallthrough
-            case .aboveChartRight:
-                horizontalAlignment = newValue == .aboveChartLeft ? .left : (newValue == .aboveChartRight ? .right : .center)
-                verticalAlignment = .top
-                orientation = .horizontal
+            case .AboveChartLeft: fallthrough
+            case .AboveChartCenter: fallthrough
+            case .AboveChartRight:
+                horizontalAlignment = newValue == .AboveChartLeft ? .Left : (newValue == .AboveChartRight ? .Right : .Center)
+                verticalAlignment = .Top
+                orientation = .Horizontal
                 
-            case .belowChartLeft: fallthrough
-            case .belowChartCenter: fallthrough
-            case .belowChartRight:
-                horizontalAlignment = newValue == .belowChartLeft ? .left : (newValue == .belowChartRight ? .right : .center)
-                verticalAlignment = .bottom
-                orientation = .horizontal
+            case .BelowChartLeft: fallthrough
+            case .BelowChartCenter: fallthrough
+            case .BelowChartRight:
+                horizontalAlignment = newValue == .BelowChartLeft ? .Left : (newValue == .BelowChartRight ? .Right : .Center)
+                verticalAlignment = .Bottom
+                orientation = .Horizontal
                 
-            case .piechartCenter:
-                horizontalAlignment = .center
-                verticalAlignment = .center
-                orientation = .vertical
+            case .PiechartCenter:
+                horizontalAlignment = .Center
+                verticalAlignment = .Center
+                orientation = .Vertical
             }
             
-            drawInside = newValue == .leftOfChartInside || newValue == .rightOfChartInside
+            drawInside = newValue == .LeftOfChartInside || newValue == .RightOfChartInside
         }
     }
     
     /// The horizontal alignment of the legend
-    open var horizontalAlignment: HorizontalAlignment = HorizontalAlignment.left
+    public var horizontalAlignment: HorizontalAlignment = HorizontalAlignment.Left
     
     /// The vertical alignment of the legend
-    open var verticalAlignment: VerticalAlignment = VerticalAlignment.bottom
+    public var verticalAlignment: VerticalAlignment = VerticalAlignment.Bottom
     
     /// The orientation of the legend
-    open var orientation: Orientation = Orientation.horizontal
+    public var orientation: Orientation = Orientation.Horizontal
     
     /// Flag indicating whether the legend will draw inside the chart or outside
-    open var drawInside: Bool = false
+    public var drawInside: Bool = false
     
     /// Flag indicating whether the legend will draw inside the chart or outside
-    open var isDrawInsideEnabled: Bool { return drawInside }
+    public var isDrawInsideEnabled: Bool { return drawInside }
     
     /// The text direction of the legend
-    open var direction: Direction = Direction.leftToRight
+    public var direction: Direction = Direction.LeftToRight
 
-    open var font: NSUIFont = NSUIFont.systemFont(ofSize: 10.0)
-    open var textColor = NSUIColor.black
+    public var font: NSUIFont = NSUIFont.systemFontOfSize(10.0)
+    public var textColor = NSUIColor.blackColor()
 
     /// The form/shape of the legend forms
-    open var form = Form.square
+    public var form = Form.Square
     
     /// The size of the legend forms
-    open var formSize = CGFloat(8.0)
+    public var formSize = CGFloat(8.0)
     
     /// The line width for forms that consist of lines
-    open var formLineWidth = CGFloat(3.0)
+    public var formLineWidth = CGFloat(3.0)
     
     /// Line dash configuration for shapes that consist of lines.
     ///
     /// This is how much (in pixels) into the dash pattern are we starting from.
-    open var formLineDashPhase: CGFloat = 0.0
+    public var formLineDashPhase: CGFloat = 0.0
     
     /// Line dash configuration for shapes that consist of lines.
     ///
     /// This is the actual dash pattern.
     /// I.e. [2, 3] will paint [--   --   ]
     /// [1, 3, 4, 2] will paint [-   ----  -   ----  ]
-    open var formLineDashLengths: [CGFloat]?
+    public var formLineDashLengths: [CGFloat]?
     
-    open var xEntrySpace = CGFloat(6.0)
-    open var yEntrySpace = CGFloat(0.0)
-    open var formToTextSpace = CGFloat(5.0)
-    open var stackSpace = CGFloat(3.0)
+    public var xEntrySpace = CGFloat(6.0)
+    public var yEntrySpace = CGFloat(0.0)
+    public var formToTextSpace = CGFloat(5.0)
+    public var stackSpace = CGFloat(3.0)
     
-    open var calculatedLabelSizes = [CGSize]()
-    open var calculatedLabelBreakPoints = [Bool]()
-    open var calculatedLineSizes = [CGSize]()
+    public var calculatedLabelSizes = [CGSize]()
+    public var calculatedLabelBreakPoints = [Bool]()
+    public var calculatedLineSizes = [CGSize]()
     
     public override init()
     {
@@ -244,7 +244,7 @@ open class Legend: ComponentBase
         self.entries = entries
     }
     
-    open func getMaximumEntrySize(_ font: NSUIFont) -> CGSize
+    public func getMaximumEntrySize(font: NSUIFont) -> CGSize
     {
         var maxW = CGFloat(0.0)
         var maxH = CGFloat(0.0)
@@ -262,7 +262,7 @@ open class Legend: ComponentBase
             guard let label = entry.label
                 else { continue }
             
-            let size = (label as NSString!).size(attributes: [NSFontAttributeName: font])
+            let size = (label as NSString!).sizeWithAttributes([NSFontAttributeName: font])
             
             if (size.width > maxW)
             {
@@ -280,29 +280,29 @@ open class Legend: ComponentBase
         )
     }
 
-    open var neededWidth = CGFloat(0.0)
-    open var neededHeight = CGFloat(0.0)
-    open var textWidthMax = CGFloat(0.0)
-    open var textHeightMax = CGFloat(0.0)
+    public var neededWidth = CGFloat(0.0)
+    public var neededHeight = CGFloat(0.0)
+    public var textWidthMax = CGFloat(0.0)
+    public var textHeightMax = CGFloat(0.0)
     
     /// flag that indicates if word wrapping is enabled
     /// this is currently supported only for `orientation == Horizontal`.
     /// you may want to set maxSizePercent when word wrapping, to set the point where the text wraps.
     /// 
     /// **default**: false
-    open var wordWrapEnabled = true
+    public var wordWrapEnabled = true
     
     /// if this is set, then word wrapping the legend is enabled.
-    open var isWordWrapEnabled: Bool { return wordWrapEnabled }
+    public var isWordWrapEnabled: Bool { return wordWrapEnabled }
 
     /// The maximum relative size out of the whole chart view in percent.
     /// If the legend is to the right/left of the chart, then this affects the width of the legend.
     /// If the legend is to the top/bottom of the chart, then this affects the height of the legend.
     /// 
     /// **default**: 0.95 (95%)
-    open var maxSizePercent: CGFloat = 0.95
+    public var maxSizePercent: CGFloat = 0.95
     
-    open func calculateDimensions(labelFont: NSUIFont, viewPortHandler: ViewPortHandler)
+    public func calculateDimensions(labelFont labelFont: NSUIFont, viewPortHandler: ViewPortHandler)
     {
         let maxEntrySize = getMaximumEntrySize(labelFont)
         let defaultFormSize = self.formSize
@@ -319,7 +319,7 @@ open class Legend: ComponentBase
         
         switch orientation
         {
-        case .vertical:
+        case .Vertical:
             
             var maxWidth = CGFloat(0.0)
             var width = CGFloat(0.0)
@@ -331,7 +331,7 @@ open class Legend: ComponentBase
             for i in 0 ..< entryCount
             {
                 let e = entries[i]
-                let drawingForm = e.form != .none
+                let drawingForm = e.form != .None
                 let formSize = isnan(e.formSize) ? defaultFormSize : e.formSize
                 let label = e.label
                 
@@ -351,7 +351,7 @@ open class Legend: ComponentBase
                 
                 if label != nil
                 {
-                    let size = (label as NSString!).size(attributes: [NSFontAttributeName: labelFont])
+                    let size = (label as NSString!).sizeWithAttributes([NSFontAttributeName: labelFont])
                     
                     if drawingForm && !wasStacked
                     {
@@ -389,7 +389,7 @@ open class Legend: ComponentBase
             neededWidth = maxWidth
             neededHeight = maxHeight
             
-        case .horizontal:
+        case .Horizontal:
             
             let labelLineHeight = labelFont.lineHeight
             
@@ -398,15 +398,15 @@ open class Legend: ComponentBase
             // Prepare arrays for calculated layout
             if (calculatedLabelSizes.count != entryCount)
             {
-                calculatedLabelSizes = [CGSize](repeating: CGSize(), count: entryCount)
+                calculatedLabelSizes = [CGSize](count: entryCount, repeatedValue: CGSize())
             }
             
             if (calculatedLabelBreakPoints.count != entryCount)
             {
-                calculatedLabelBreakPoints = [Bool](repeating: false, count: entryCount)
+                calculatedLabelBreakPoints = [Bool](count: entryCount, repeatedValue: false)
             }
             
-            calculatedLineSizes.removeAll(keepingCapacity: true)
+            calculatedLineSizes.removeAll(keepCapacity: true)
             
             // Start calculating layout
             
@@ -419,7 +419,7 @@ open class Legend: ComponentBase
             for i in 0 ..< entryCount
             {
                 let e = entries[i]
-                let drawingForm = e.form != .none
+                let drawingForm = e.form != .None
                 let label = e.label
                 
                 calculatedLabelBreakPoints[i] = false
@@ -438,7 +438,7 @@ open class Legend: ComponentBase
                 // grouped forms have null labels
                 if label != nil
                 {
-                    calculatedLabelSizes[i] = (label as NSString!).size(attributes: labelAttrs)
+                    calculatedLabelSizes[i] = (label as NSString!).sizeWithAttributes(labelAttrs)
                     requiredWidth += drawingForm ? formToTextSpace + formSize : 0.0
                     requiredWidth += calculatedLabelSizes[i].width
                 }
@@ -502,21 +502,21 @@ open class Legend: ComponentBase
     /// * A nil label will start a group.
     /// This will disable the feature that automatically calculates the legend entries from the datasets.
     /// Call `resetCustom(...)` to re-enable automatic calculation (and then `notifyDataSetChanged()` is needed).
-    open func setCustom(entries: [LegendEntry])
+    public func setCustom(entries entries: [LegendEntry])
     {
         self.entries = entries
         _isLegendCustom = true
     }
     
     /// Calling this will disable the custom legend entries (set by `setLegend(...)`). Instead, the entries will again be calculated automatically (after `notifyDataSetChanged()` is called).
-    open func resetCustom()
+    public func resetCustom()
     {
         _isLegendCustom = false
     }
     
     /// **default**: false (automatic legend)
     /// - returns: `true` if a custom legend entries has been set
-    open var isLegendCustom: Bool
+    public var isLegendCustom: Bool
     {
         return _isLegendCustom
     }
@@ -524,8 +524,8 @@ open class Legend: ComponentBase
     // MARK: - Deprecated stuff
     
     /// This property is deprecated - Use `entries`.
-    @available(*, deprecated: 1.0, message: "Use `entries`.")
-    open var colors: [NSUIColor?]
+    @available(*, deprecated=1.0, message="Use `entries`.")
+    public var colors: [NSUIColor?]
     {
         get
         {
@@ -533,8 +533,8 @@ open class Legend: ComponentBase
             for e in entries
             {
                 old.append(
-                    e.form == .none ? nil :
-                        (e.form == .empty ? NSUIColor.clear :
+                    e.form == .None ? nil :
+                        (e.form == .Empty ? NSUIColor.clearColor() :
                         e.formColor))
             }
             return old
@@ -551,19 +551,19 @@ open class Legend: ComponentBase
                 
                 if newValue[i] == nil
                 {
-                    entries[i].form = .none
+                    entries[i].form = .None
                 }
-                else if newValue[i] == NSUIColor.clear
+                else if newValue[i] == NSUIColor.clearColor()
                 {
-                    entries[i].form = .empty
+                    entries[i].form = .Empty
                 }
             }
         }
     }
     
     /// This property is deprecated - Use `entries`.
-    @available(*, deprecated: 1.0, message: "Use `entries`.")
-    open var labels: [String?]
+    @available(*, deprecated=1.0, message="Use `entries`.")
+    public var labels: [String?]
     {
         get
         {
@@ -589,8 +589,8 @@ open class Legend: ComponentBase
     
     
     /// This property is deprecated - Use `extraEntries`.
-    @available(*, deprecated: 1.0, message: "Use `extraEntries`.")
-    open var extraColors: [NSUIColor?]
+    @available(*, deprecated=1.0, message="Use `extraEntries`.")
+    public var extraColors: [NSUIColor?]
     {
         get
         {
@@ -598,8 +598,8 @@ open class Legend: ComponentBase
             for e in extraEntries
             {
                 old.append(
-                    e.form == .none ? nil :
-                        (e.form == .empty ? NSUIColor.clear :
+                    e.form == .None ? nil :
+                        (e.form == .Empty ? NSUIColor.clearColor() :
                             e.formColor))
             }
             return old
@@ -608,7 +608,7 @@ open class Legend: ComponentBase
         {
             if extraEntries.count > newValue.count
             {
-                extraEntries.removeSubrange(newValue.count ..< extraEntries.count)
+                extraEntries.removeRange(newValue.count ..< extraEntries.count)
             }
             
             for i in 0 ..< newValue.count
@@ -617,19 +617,19 @@ open class Legend: ComponentBase
                 
                 if newValue[i] == nil
                 {
-                    extraEntries[i].form = .none
+                    extraEntries[i].form = .None
                 }
-                else if newValue[i] == NSUIColor.clear
+                else if newValue[i] == NSUIColor.clearColor()
                 {
-                    extraEntries[i].form = .empty
+                    extraEntries[i].form = .Empty
                 }
             }
         }
     }
     
     /// This property is deprecated - Use `extraEntries`.
-    @available(*, deprecated: 1.0, message: "Use `extraEntries`.")
-    open var extraLabels: [String?]
+    @available(*, deprecated=1.0, message="Use `extraEntries`.")
+    public var extraLabels: [String?]
     {
         get
         {
@@ -644,7 +644,7 @@ open class Legend: ComponentBase
         {
             if extraEntries.count > newValue.count
             {
-                extraEntries.removeSubrange(newValue.count ..< extraEntries.count)
+                extraEntries.removeRange(newValue.count ..< extraEntries.count)
             }
             
             for i in 0 ..< newValue.count
@@ -655,7 +655,7 @@ open class Legend: ComponentBase
     }
     
     /// This constructor is deprecated - Use `init(entries:)`
-    @available(*, deprecated: 1.0, message: "Use `init(entries:)`")
+    @available(*, deprecated=1.0, message="Use `init(entries:)`")
     public init(colors: [NSUIColor?], labels: [String?])
     {
         super.init()
@@ -670,11 +670,11 @@ open class Legend: ComponentBase
             
             if entry.formColor == nil
             {
-                entry.form = .none
+                entry.form = .None
             }
-            else if entry.formColor == NSUIColor.clear
+            else if entry.formColor == NSUIColor.clearColor()
             {
-                entry.form = .empty
+                entry.form = .Empty
             }
             
             entries.append(entry)
@@ -684,7 +684,7 @@ open class Legend: ComponentBase
     }
     
     /// This constructor is deprecated - Use `init(entries:)`
-    @available(*, deprecated: 1.0, message: "Use `init(entries:)`")
+    @available(*, deprecated=1.0, message="Use `init(entries:)`")
     public init(colors: [NSObject], labels: [NSObject])
     {
         super.init()
@@ -699,11 +699,11 @@ open class Legend: ComponentBase
             
             if entry.formColor == nil
             {
-                entry.form = .none
+                entry.form = .None
             }
-            else if entry.formColor == NSUIColor.clear
+            else if entry.formColor == NSUIColor.clearColor()
             {
-                entry.form = .empty
+                entry.form = .Empty
             }
             
             entries.append(entry)
@@ -713,45 +713,45 @@ open class Legend: ComponentBase
     }
     
     /// This property is deprecated - Use `extraEntries`
-    @available(*, deprecated: 1.0, message: "Use `extraEntries`")
-    open var extraColorsObjc: [NSObject]
+    @available(*, deprecated=1.0, message="Use `extraEntries`")
+    public var extraColorsObjc: [NSObject]
     {
         return ChartUtils.bridgedObjCGetNSUIColorArray(swift: extraColors)
     }
     
     /// This property is deprecated - Use `extraLabels`
-    @available(*, deprecated: 1.0, message: "Use `extraLabels`")
-    open var extraLabelsObjc: [NSObject]
+    @available(*, deprecated=1.0, message="Use `extraLabels`")
+    public var extraLabelsObjc: [NSObject]
     {
         return ChartUtils.bridgedObjCGetStringArray(swift: extraLabels)
     }
     
     /// This property is deprecated - Use `colors`
-    @available(*, deprecated: 1.0, message: "Use `colors`")
-    open var colorsObjc: [NSObject]
+    @available(*, deprecated=1.0, message="Use `colors`")
+    public var colorsObjc: [NSObject]
     {
         get { return ChartUtils.bridgedObjCGetNSUIColorArray(swift: colors) }
         set { self.colors = ChartUtils.bridgedObjCGetNSUIColorArray(objc: newValue) }
     }
     
     /// This property is deprecated - Use `labels`
-    @available(*, deprecated: 1.0, message: "Use `labels`")
-    open var labelsObjc: [NSObject]
+    @available(*, deprecated=1.0, message="Use `labels`")
+    public var labelsObjc: [NSObject]
     {
         get { return ChartUtils.bridgedObjCGetStringArray(swift: labels) }
         set { self.labels = ChartUtils.bridgedObjCGetStringArray(objc: newValue) }
     }
     
     /// This function is deprecated - Use `entries`
-    @available(*, deprecated: 1.0, message: "Use `entries`")
-    open func getLabel(_ index: Int) -> String?
+    @available(*, deprecated=1.0, message="Use `entries`")
+    public func getLabel(index: Int) -> String?
     {
         return entries[index].label
     }
     
     /// This function is deprecated - Use `Use `extra(entries:)`
-    @available(*, deprecated: 1.0, message: "Use `extra(entries:)`")
-    open func setExtra(colors: [NSUIColor?], labels: [String?])
+    @available(*, deprecated=1.0, message="Use `extra(entries:)`")
+    public func setExtra(colors colors: [NSUIColor?], labels: [String?])
     {
         var entries = [LegendEntry]()
         
@@ -763,11 +763,11 @@ open class Legend: ComponentBase
             
             if entry.formColor == nil
             {
-                entry.form = .none
+                entry.form = .None
             }
-            else if entry.formColor == NSUIColor.clear
+            else if entry.formColor == NSUIColor.clearColor()
             {
-                entry.form = .empty
+                entry.form = .Empty
             }
             
             entries.append(entry)
@@ -777,8 +777,8 @@ open class Legend: ComponentBase
     }
     
     /// This function is deprecated - Use `Use `extra(entries:)`
-    @available(*, deprecated: 1.0, message: "Use `extra(entries:)`")
-    open func setExtra(colors: [NSObject], labels: [NSObject])
+    @available(*, deprecated=1.0, message="Use `extra(entries:)`")
+    public func setExtra(colors colors: [NSObject], labels: [NSObject])
     {
         var entries = [LegendEntry]()
         
@@ -790,11 +790,11 @@ open class Legend: ComponentBase
             
             if entry.formColor == nil
             {
-                entry.form = .none
+                entry.form = .None
             }
-            else if entry.formColor == NSUIColor.clear
+            else if entry.formColor == NSUIColor.clearColor()
             {
-                entry.form = .empty
+                entry.form = .Empty
             }
             
             entries.append(entry)
@@ -804,8 +804,8 @@ open class Legend: ComponentBase
     }
     
     /// This function is deprecated - Use `Use `setCustom(entries:)`
-    @available(*, deprecated: 1.0, message: "Use `setCustom(entries:)`")
-    open func setCustom(colors: [NSUIColor?], labels: [String?])
+    @available(*, deprecated=1.0, message="Use `setCustom(entries:)`")
+    public func setCustom(colors colors: [NSUIColor?], labels: [String?])
     {
         var entries = [LegendEntry]()
         
@@ -817,11 +817,11 @@ open class Legend: ComponentBase
             
             if entry.formColor == nil
             {
-                entry.form = .none
+                entry.form = .None
             }
-            else if entry.formColor == NSUIColor.clear
+            else if entry.formColor == NSUIColor.clearColor()
             {
-                entry.form = .empty
+                entry.form = .Empty
             }
             
             entries.append(entry)
@@ -831,8 +831,8 @@ open class Legend: ComponentBase
     }
     
     /// This function is deprecated - Use `Use `setCustom(entries:)`
-    @available(*, deprecated: 1.0, message: "Use `setCustom(entries:)`")
-    open func setCustom(colors: [NSObject], labels: [NSObject])
+    @available(*, deprecated=1.0, message="Use `setCustom(entries:)`")
+    public func setCustom(colors colors: [NSObject], labels: [NSObject])
     {
         var entries = [LegendEntry]()
         
@@ -844,11 +844,11 @@ open class Legend: ComponentBase
             
             if entry.formColor == nil
             {
-                entry.form = .none
+                entry.form = .None
             }
-            else if entry.formColor == NSUIColor.clear
+            else if entry.formColor == NSUIColor.clearColor()
             {
-                entry.form = .empty
+                entry.form = .Empty
             }
             
             entries.append(entry)

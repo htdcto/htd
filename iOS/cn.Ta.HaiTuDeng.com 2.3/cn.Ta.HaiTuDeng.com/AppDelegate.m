@@ -22,7 +22,7 @@
     
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
+
     //iOS8 注册APNS
     if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
         [application registerForRemoteNotifications];
@@ -49,6 +49,8 @@
     [self setupUMeng];
     
     [self taApplication:application didFinishLaunchingWithOptions:launchOptions appkey:TaAppleKey apnsCertName:aspnCerName otherConfig:nil];
+    
+    [self.window makeKeyAndVisible];
     return YES;
 }
 

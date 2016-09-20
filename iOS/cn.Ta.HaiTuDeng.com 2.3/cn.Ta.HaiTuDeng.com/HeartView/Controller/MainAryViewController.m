@@ -488,7 +488,7 @@ static MainAryViewController *mavc;
             }
         }error:^(NSError *error)
          {
-             NSLog(@"网络故障");
+             NSLog(@"错误的原因:%@",error);
          }];
     });
 

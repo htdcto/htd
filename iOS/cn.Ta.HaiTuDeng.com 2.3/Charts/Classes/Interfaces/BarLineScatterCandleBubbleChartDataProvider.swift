@@ -15,8 +15,8 @@ import CoreGraphics
 @objc
 public protocol BarLineScatterCandleBubbleChartDataProvider: ChartDataProvider
 {
-    func getTransformer(_ which: YAxis.AxisDependency) -> Transformer
-    func isInverted(_ axis: YAxis.AxisDependency) -> Bool
+    func getTransformer(which: YAxis.AxisDependency) -> Transformer
+    func isInverted(axis: YAxis.AxisDependency) -> Bool
     
     var lowestVisibleX: Double { get }
     var highestVisibleX: Double { get }

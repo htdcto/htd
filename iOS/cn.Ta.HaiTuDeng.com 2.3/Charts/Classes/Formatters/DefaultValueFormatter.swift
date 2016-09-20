@@ -12,13 +12,13 @@
 import Foundation
 
 @objc(ChartDefaultValueFormatter)
-open class DefaultValueFormatter: NSObject, IValueFormatter
+public class DefaultValueFormatter: NSObject, IValueFormatter
 {
     
-    open var hasAutoDecimals: Bool = false
+    public var hasAutoDecimals: Bool = false
     
-    fileprivate var _formatter: NumberFormatter?
-    open var formatter: NumberFormatter?
+    private var _formatter: NSNumberFormatter?
+    public var formatter: NSNumberFormatter?
     {
         get { return _formatter }
         set
@@ -28,8 +28,8 @@ open class DefaultValueFormatter: NSObject, IValueFormatter
         }
     }
     
-    fileprivate var _decimals: Int?
-    open var decimals: Int?
+    private var _decimals: Int?
+    public var decimals: Int?
     {
         get { return _decimals }
         set
@@ -49,11 +49,11 @@ open class DefaultValueFormatter: NSObject, IValueFormatter
     {
         super.init()
         
-        self.formatter = NumberFormatter()
+        self.formatter = NSNumberFormatter()
         hasAutoDecimals = true
     }
     
-    public init(formatter: NumberFormatter)
+    public init(formatter: NSNumberFormatter)
     {
         super.init()
         
@@ -64,18 +64,18 @@ open class DefaultValueFormatter: NSObject, IValueFormatter
     {
         super.init()
         
-        self.formatter = NumberFormatter()
+        self.formatter = NSNumberFormatter()
         self.formatter?.usesGroupingSeparator = true
         self.decimals = decimals
         hasAutoDecimals = true
     }
     
-    open func stringForValue(_ value: Double,
+    public func stringForValue(value: Double,
                         entry: ChartDataEntry,
                         dataSetIndex: Int,
                         viewPortHandler: ViewPortHandler?) -> String
     {
-        return formatter?.string(from: NSNumber(value)) ?? ""
+        return formatter?.stringFromNumber(value) ?? ""
     }
     
 }

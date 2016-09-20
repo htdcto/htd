@@ -180,14 +180,10 @@ static Helper *helper = nil;
 
 #pragma mark -
 //-------------------------------------------------
--(void)didAutoLoginWithError:(EMError *)aError
+// 网络状态变化回调
+- (void)didConnectionStateChanged:(EMConnectionState)connectionState
 {
-    NSLog(@"来自IM：已经自动登录");
-}
-
-- (void)didConnectionStateChanged:(EMConnectionState)aConnectionState;
-{
-    NSLog(@"来自IM:连接状态发生改变");
+    [self.mainVC showNetworkAlert:nil :connectionState];
 }
 //-------------------------------------------------xzl
 

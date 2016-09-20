@@ -10,10 +10,10 @@
 //
 import Foundation
 
-open class CrossShapeRenderer : NSObject, IShapeRenderer
+public class CrossShapeRenderer : NSObject, IShapeRenderer
 {
-    open func renderShape(
-        context: CGContext,
+    public func renderShape(
+        context context: CGContext,
                 dataSet: IScatterChartDataSet,
                 viewPortHandler: ViewPortHandler,
                 point: CGPoint,
@@ -22,14 +22,14 @@ open class CrossShapeRenderer : NSObject, IShapeRenderer
         let shapeSize = dataSet.scatterShapeSize
         let shapeHalf = shapeSize / 2.0
         
-        context.setLineWidth(1.0)
-        context.setStrokeColor(color.cgColor)
+        CGContextSetLineWidth(context, 1.0)
+        CGContextSetStrokeColorWithColor(context, color.CGColor)
         
-        context.beginPath()
-        context.move(to: CGPoint(x: point.x - shapeHalf, y: point.y))
-        context.addLine(to: CGPoint(x: point.x + shapeHalf, y: point.y))
-        context.move(to: CGPoint(x: point.x, y: point.y - shapeHalf))
-        context.addLine(to: CGPoint(x: point.x, y: point.y + shapeHalf))
-        context.strokePath()
+        CGContextBeginPath(context)
+        CGContextMoveToPoint(context, point.x - shapeHalf, point.y)
+        CGContextAddLineToPoint(context, point.x + shapeHalf, point.y)
+        CGContextMoveToPoint(context, point.x, point.y - shapeHalf)
+        CGContextAddLineToPoint(context, point.x, point.y + shapeHalf)
+        CGContextStrokePath(context)
     }
 }

@@ -13,7 +13,7 @@ import Foundation
 import CoreGraphics
 
 @objc(BarLineScatterCandleBubbleChartRenderer)
-open class BarLineScatterCandleBubbleRenderer: DataRenderer
+public class BarLineScatterCandleBubbleRenderer: DataRenderer
 {
     internal var _xBounds = XBounds() // Reusable XBounds object
     
@@ -39,7 +39,7 @@ open class BarLineScatterCandleBubbleRenderer: DataRenderer
 
     /// Calculates and returns the x-bounds for the given DataSet in terms of index in their values array.
     /// This includes minimum and maximum visible x, as well as range.
-    internal func xBounds(_ chart: BarLineScatterCandleBubbleChartDataProvider,
+    internal func xBounds(chart: BarLineScatterCandleBubbleChartDataProvider,
                           dataSet: IBarLineScatterCandleBubbleChartDataSet,
                           animator: Animator?) -> XBounds
     {
@@ -53,16 +53,16 @@ open class BarLineScatterCandleBubbleRenderer: DataRenderer
     }
 
     /// Class representing the bounds of the current viewport in terms of indices in the values array of a DataSet.
-    open class XBounds
+    public class XBounds
     {
         /// minimum visible entry index
-        open var min: Int = 0
+        public var min: Int = 0
 
         /// maximum visible entry index
-        open var max: Int = 0
+        public var max: Int = 0
 
         /// range of visible entry indices
-        open var range: Int = 0
+        public var range: Int = 0
 
         public init()
         {
@@ -77,7 +77,7 @@ open class BarLineScatterCandleBubbleRenderer: DataRenderer
         }
         
         /// Calculates the minimum and maximum x values as well as the range between them.
-        open func set(chart: BarLineScatterCandleBubbleChartDataProvider,
+        public func set(chart chart: BarLineScatterCandleBubbleChartDataProvider,
                               dataSet: IBarLineScatterCandleBubbleChartDataSet,
                               animator: Animator?)
         {
@@ -86,8 +86,8 @@ open class BarLineScatterCandleBubbleRenderer: DataRenderer
             let low = chart.lowestVisibleX
             let high = chart.highestVisibleX
             
-            let entryFrom = dataSet.entryForXValue(low, rounding: ChartDataSetRounding.down)
-            let entryTo = dataSet.entryForXValue(high, rounding: ChartDataSetRounding.up)
+            let entryFrom = dataSet.entryForXValue(low, rounding: ChartDataSetRounding.Down)
+            let entryTo = dataSet.entryForXValue(high, rounding: ChartDataSetRounding.Up)
             
             self.min = entryFrom == nil ? 0 : dataSet.entryIndex(entry: entryFrom!)
             self.max = entryTo == nil ? 0 : dataSet.entryIndex(entry: entryTo!)

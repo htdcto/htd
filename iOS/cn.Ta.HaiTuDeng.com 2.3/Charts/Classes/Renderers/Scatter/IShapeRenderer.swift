@@ -22,7 +22,7 @@ public protocol IShapeRenderer : NSObjectProtocol
     /// - parameter point:           Position to draw the shape at
     /// - parameter color:           Color to draw the shape
     func renderShape(
-        context: CGContext,
+        context context: CGContext,
                 dataSet: IScatterChartDataSet,
                 viewPortHandler: ViewPortHandler,
                 point: CGPoint,

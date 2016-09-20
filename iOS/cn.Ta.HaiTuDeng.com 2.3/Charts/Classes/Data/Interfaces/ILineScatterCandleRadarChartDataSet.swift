@@ -32,5 +32,5 @@ public protocol ILineScatterCandleRadarChartDataSet: IBarLineScatterCandleBubble
     
     /// Enables / disables both vertical and horizontal highlight-indicators.
     /// :param: enabled
-    func setDrawHighlightIndicators(_ enabled: Bool)
+    func setDrawHighlightIndicators(enabled: Bool)
 }

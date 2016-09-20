@@ -12,10 +12,10 @@
 import Foundation
 
 @objc(ChartDataApproximator)
-open class DataApproximator: NSObject
+public class DataApproximator: NSObject
 {
     /// uses the douglas peuker algorithm to reduce the given arraylist of entries
-    open class func reduceWithDouglasPeuker(_ points: [CGPoint], tolerance: CGFloat) -> [CGPoint]
+    public class func reduceWithDouglasPeuker(points: [CGPoint], tolerance: CGFloat) -> [CGPoint]
     {
         // if a shape has 2 or less points it cannot be reduced
         if tolerance <= 0 || points.count < 3
@@ -23,7 +23,7 @@ open class DataApproximator: NSObject
             return points
         }
         
-        var keep = [Bool](repeating: false, count: points.count)
+        var keep = [Bool](count: points.count, repeatedValue: false)
         
         // first and last always stay
         keep[0] = true
@@ -55,12 +55,12 @@ open class DataApproximator: NSObject
     /// - parameter tolerance:
     /// - parameter start:
     /// - parameter end:
-    open class func reduceWithDouglasPeuker(
-        _ points: [CGPoint],
+    public class func reduceWithDouglasPeuker(
+        points: [CGPoint],
         tolerance: CGFloat,
         start: Int,
         end: Int,
-        keep: inout [Bool])
+        inout keep: [Bool])
     {
         if (end <= start + 1)
         {
@@ -95,7 +95,7 @@ open class DataApproximator: NSObject
         } // else don't keep the point...
     }
     
-    fileprivate class Line
+    private class Line
     {
         var sxey: CGFloat
         var exsy: CGFloat

@@ -16,4 +16,5 @@
 
 - (void)playSoundAndVibration;
 - (void)showNotificationWithMessage:(EMMessage *)message;
+-(void)showNetworkAlert:(NSNotification *)notification :(EMConnectionState)connectionState;
 @end
